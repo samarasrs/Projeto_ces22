@@ -9,5 +9,7 @@ keybinding={
     'down':pg.K_DOWN
 }
 
+#deve conter a classe de controle e a classe de estados
 
-class _Estados(object):
+
+class _State(object):

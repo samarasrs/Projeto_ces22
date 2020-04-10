@@ -17,7 +17,7 @@ TELA = pg.display.set_mode(c.TELA_TAMANHO)
 TELA_RECT = TELA.get_rect()
 
 
-
+#completar os caminhos para as pastas de imagens e sons
 FONTS=''
 MUSIC=''
 GFFX=''
