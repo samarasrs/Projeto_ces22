@@ -2,6 +2,7 @@ import pygame as pg
 import os
 from . import tools
 from . import constants as c
+TITULO=c.TITULO
 
 #deixando o video centralizado
 os.environ['SDL_VIDEO_CENTERED']='1'
@@ -18,7 +19,8 @@ TELA_RECT = TELA.get_rect()
 
 
 #completar os caminhos para as pastas de imagens e sons
-FONTS=''
-MUSIC=''
-GFFX=''
-SFX=''
+'''
+MUSIC = tools.load_all_music(os.path.join("resources","music"))
+GFX   = tools.load_all_gfx(os.path.join("resources","graphics"))
+SFX   = tools.load_all_sfx(os.path.join("resources","sound"))
+'''

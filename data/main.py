@@ -1,8 +1,8 @@
 from . import setup, tools
-import constants as c
+from . import constants as c
 
 def main ():
-    rodar_jogo=tools.Control(setup.TITLE)
+    rodar_jogo=tools.Control(setup.TITULO)
     dicionario_estados ={
         c.MAIN_MENU: main_menu.Menu(),
         c.LOAD_SCREEN: load_screen.LoadScreen(),

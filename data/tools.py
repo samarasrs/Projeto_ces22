@@ -75,4 +75,80 @@ class Control(object):
         #pega o tempo em milisegundos
         self.current_time = pg.time.get_ticks()
         #verificando se botao de sair foi pressionado
-        if self.state.quit:
+        if self.state.done:
+            self.flip_state()
+        self.update(self.screen, self.current_time, self.keys)
+
+    def flip_state(self):
+        previous, self.state_name = self.state_name, self.state.next
+        persist = self.state.cleanup()
+        self.state = self.state_dict[self.state_name]
+        self.state.startup(self.current_time, persist)
+
+    def event_loop(self):
+
+        for event in pg.event.get():
+            #verificando se o evento foi quit
+            if event.type == pg.QUIT:
+                self.done = True
+            #verificando se a tecla esta apertada
+            elif event.type == pg.KEYDOWN:
+                self.keys = pg.key.get_pressed()
+            #verificando se a tecla foi solta
+            elif event.type == pg.KEYUP:
+                self.keys = pg.key.get_pressed()
+            #pegando um novo evento
+            self.state.get_event(event)
+
+    def main(self):
+        #enquando a tela nao foi fechada
+        while not self.done:
+            #executa a funçao de pegar eventos
+            self.event_loop()
+            #atualiza o estado
+            self.update()
+            #atualiza a tela
+            pg.display.update()
+            #atualiza o relogio
+            self.clock.tick(self.fps)
+def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpg', 'bmp')):
+    graphics = {}
+    for pic in os.listdir(directory):
+        name, ext = os.path.splitext(pic)
+        if ext.lower() in accept:
+            img = pg.image.load(os.path.join(directory, pic))
+            if img.get_alpha():
+                img = img.convert_alpha()
+            else:
+                img = img.convert()
+                img.set_colorkey(colorkey)
+            graphics[name]=img
+    return graphics
+
+
+
+
+def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
+    songs = {}
+    for song in os.listdir(directory):
+        name,ext = os.path.splitext(song)
+        if ext.lower() in accept:
+            songs[name] = os.path.join(directory, song)
+    return songs
+
+def load_all_sfx(directory, accept=('.wav','.mpe','.ogg','.mdi')):
+    effects = {}
+    for fx in os.listdir(directory):
+        name, ext = os.path.splitext(fx)
+        if ext.lower() in accept:
+            effects[name] = pg.mixer.Sound(os.path.join(directory, fx))
+    return effects
+
+def load_all_sfx(directory, accept=('.wav','.mpe','.ogg','.mdi')):
+    effects = {}
+    for fx in os.listdir(directory):
+        name, ext = os.path.splitext(fx)
+        if ext.lower() in accept:
+            effects[name] = pg.mixer.Sound(os.path.join(directory, fx))
+    return effects
+
