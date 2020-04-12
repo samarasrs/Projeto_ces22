@@ -32,14 +32,14 @@ GOLD         = (255, 215,   0)
 #MENU
 #posição das imagens e textos no Menu
 POS_TITULO= [50,0]
-POS_BOTAO1= [285, 150]
-POS_BOTAO2= [285, 210]
-POS_BOTAO3= [285, 270]
+POS_BOTAO1= [285, 170]
+POS_BOTAO2= [285, 230]
+POS_BOTAO3= [560, 350]
 POS_BOTAO_VOLTAR = [10, 350]
 POS_BACKGROUND= [0,0]
-POS_TEXT_BOTAO1= [322, 155]
-POS_TEXT_BOTAO2= [319, 215]
-POS_TEXT_BOTAO3= [306, 275]
+POS_TEXT_BOTAO1= [322, 175]
+POS_TEXT_BOTAO2= [319, 235]
+POS_TEXT_BOTAO3= [581, 355]
 POS_TEXT_BOTAO_VOLTAR= [42, 355]
 POS_TEXT_TIT_TELA2= [270,0]
 POS_TEXT_TIT_TELA3= [240,0]
@@ -64,9 +64,9 @@ FONT_TITULO_TAMANHO= 100
 FONT_BOTOES_TAMANHO= 20
 
 #estados do cursor
-BOTAO1= '1'
-BOTAO2= '2'
-BOTAO3= '3'
+BOTAO1= 'bot 1'
+BOTAO2= 'bot 2'
+BOTAO3= 'bot 3'
 
 
 #Estados do jogo (state_dict)
@@ -76,3 +76,8 @@ TIME_OUT = 'time out'
 GAME_OVER = 'game over'
 LEVEL1 = 'level1'
 
+#telas do Menu
+
+TELA1 = 'Menu'
+TELA2 = 'Ajuda'
+TELA3 = 'Creditos'
