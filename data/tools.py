@@ -78,7 +78,8 @@ class Control(object):
         # verificando se botao de sair foi pressionado
         if self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.current_time, self.keys)
+        # executa a função update do arquivo main_menu
+        self.state.update(self.screen, self.keys, self.current_time)
 
     def flip_state(self):
         previous, self.state_name = self.state_name, self.state.next
@@ -87,7 +88,6 @@ class Control(object):
         self.state.startup(self.current_time, persist)
 
     def event_loop(self):
-
         for event in pg.event.get():
             # verificando se o evento foi quit
             if event.type == pg.QUIT:
