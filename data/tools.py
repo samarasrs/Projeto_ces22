@@ -126,7 +126,13 @@ def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpg', 'bmp'))
     return graphics
 
 
-
+def load_all_fonts(directory, accept=('.ttf')):
+    fonts = {}
+    for font in os.listdir(directory):
+        name,ext = os.path.splitext(font)
+        if ext.lower() in accept:
+            fonts[name] = os.path.join(directory, font)
+    return fonts
 
 def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
     songs = {}
