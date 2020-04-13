@@ -29,6 +29,7 @@ class _State(object):
         # dados necessarios para o estado atual (qnt de vidas, qnt de poder etc)
         self.persist = {}
 
+
     def get_event(self, event):
         pass
 
@@ -66,6 +67,7 @@ class Control(object):
         self.state_name = None
         # variavel para armazenar o dado do estado
         self.state = None
+        self.trocou = False
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
@@ -100,6 +102,8 @@ class Control(object):
                 self.keys = pg.key.get_pressed()
             # pegando um novo evento
             self.state.get_event(event)
+
+
 
     def main(self):
         # enquando a tela nao foi fechada
