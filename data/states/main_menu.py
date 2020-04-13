@@ -29,8 +29,6 @@ class Menu(tools._State):
         self.botao_creditos = self.setup_botao()
         self.botao_voltar = self.setup_botao()
 
-        #self.text_perm1 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-        #self.text_perm2 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
         self.text_jogar = self.setup_texto_botao(c.TEXT_JOGAR, c.FONT_BOTOES_TAMANHO)
         self.text_ajuda = self.setup_texto_botao(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
         self.text_creditos = self.setup_texto_botao(c.TEXT_CREDITO, c.FONT_BOTOES_TAMANHO)
@@ -57,7 +55,7 @@ class Menu(tools._State):
 
     def setup_background(self):
         # tela 1
-        self.background= pg.transform.scale(setup.GFX['Menu'],(c.TELA_LARGURA,c.TELA_ALTURA))
+        self.background= setup.GFX['Menu']
 
         #tela 2 e 3
         self.imagem = pg.Surface((c.TELA_LARGURA, c.TELA_ALTURA))
@@ -85,8 +83,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_ajuda = self.setup_botao_selecionado()
 
-                self.text_perm1 = self.setup_texto_botao(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
                 self.text_ajuda = self.setup_texto_botao_selecionado(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
 
             if keys[pg.K_RIGHT]:
@@ -94,8 +90,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_jogar = self.setup_botao_selecionado()
 
-                self.text_perm1 = self.setup_texto_botao(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
                 self.text_jogar = self.setup_texto_botao_selecionado(c.TEXT_JOGAR, c.FONT_BOTOES_TAMANHO)
 
         elif self.cursor == c.BOTAO_JOGAR:
@@ -113,8 +107,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_jogar = self.setup_texto_botao(c.TEXT_JOGAR, c.FONT_BOTOES_TAMANHO)
-                self.text_perm1 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
 
         elif self.cursor == c.BOTAO_CREDITOS:
             if keys[pg.K_UP]:
@@ -140,8 +132,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_ajuda = self.setup_texto_botao(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
-                self.text_perm1 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
 
             elif keys[pg.K_RIGHT]:
                 self.cursor = c.BOTAO_CREDITOS
@@ -159,8 +149,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_voltar = self.setup_botao_selecionado()
 
-                self.text_perm1 = self.setup_texto_botao(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
                 self.text_voltar = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_VOLTAR, c.FONT_BOTOES_TAMANHO)
 
         elif self.cursor == c.BOTAO_VOLTA:
@@ -170,8 +158,6 @@ class Menu(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_voltar = self.setup_texto_botao(c.TEXT_BOTAO_VOLTAR, c.FONT_BOTOES_TAMANHO)
-                self.text_perm1 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM1, c.FONT_BOTAO_PERM)
-                self.text_perm2 = self.setup_texto_botao_selecionado(c.TEXT_BOTAO_PERM2, c.FONT_BOTAO_PERM)
 
     def blit_menu(self, surface):
         surface.blit(self.background, c.POS_BACKGROUND)
@@ -183,12 +169,11 @@ class Menu(tools._State):
         surface.blit(self.text_jogar, c.POS_TEXT_JOGAR)
         surface.blit(self.text_ajuda, c.POS_TEXT_AJUDA)
         surface.blit(self.text_creditos, c.POS_TEXT_CREDITO)
-        #surface.blit(self.text_perm1, c.POS_TEXT_BOTAO_PERM1_TELA1)
-        #surface.blit(self.text_perm2, c.POS_TEXT_BOTAO_PERM2_TELA1)
+
 
     def blit_tela2(self, surface):
         surface.blit(self.background, c.POS_BACKGROUND)
-        surface.blit(self.imagem, c.POS_BACKGROUND)
+        surface.blit(self.imagem, [0, 0])
         surface.blit(self.botao_voltar, c.POS_BOTAO_VOLTAR)
         surface.blit(self.botao_perm, c.POS_BOTAO_PERM)
         surface.blit(self.text_tela2, c.POS_TEXT_TIT_TELA2)
@@ -197,7 +182,7 @@ class Menu(tools._State):
 
     def blit_tela3(self, surface):
         surface.blit(self.background, c.POS_BACKGROUND)
-        surface.blit(self.imagem, c.POS_BACKGROUND)
+        surface.blit(self.imagem, [0, 0])
         surface.blit(self.botao_voltar, c.POS_BOTAO_VOLTAR)
         surface.blit(self.botao_perm, c.POS_BOTAO_PERM)
         surface.blit(self.text_tela3, c.POS_TEXT_TIT_TELA3)
