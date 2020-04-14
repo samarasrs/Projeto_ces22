@@ -4,10 +4,10 @@ TELA_LARGURA = 800
 
 TELA_TAMANHO = (TELA_LARGURA, TELA_ALTURA)
 
-#definindo titulo
+# definindo titulo
 TITULO = "The Prince Dragon"
 
-#definir as cores em RGB 
+# definir as cores em RGB
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GRAY = (100, 100, 100)
@@ -26,37 +26,36 @@ COMBLUE      = (233, 232, 255)
 GOLD         = (255, 215,   0)
 
 
-#Fisica
+# Fisica
 
-#####
-#MENU
-#posição das imagens e textos no Menu
-POS_TITULO= [85,10]
+
+
+# MENU
+# posição das imagens e textos no Menu
+POS_TITULO = [85,10]
 POS_BOTAO_PERM_TELA1 = [280,220]
-POS_BOTAO_JOGAR= [410, 230]
-POS_BOTAO_AJUDA= [230, 310]
-POS_BOTAO_CREDITO= [410,310]
-#POS_BOTAO3= [560, 350] #Creditos
+POS_BOTAO_JOGAR = [410, 230]
+POS_BOTAO_AJUDA = [230, 310]
+POS_BOTAO_CREDITO = [410,310]
 POS_BOTAO_VOLTAR = [10, 530]
 POS_BOTAO_PERM = [50, 440]
-POS_BACKGROUND= [-110,0]
-POS_TEXT_JOGAR= [445, 235]
-POS_TEXT_AJUDA= [260, 315]
-POS_TEXT_CREDITO= [425, 315]
-POS_TEXT_VOLTAR= [42, 535]
-POS_TEXT_TIT_TELA2= [305,10]
-POS_TEXT_TIT_TELA3= [250,10]
+POS_BACKGROUND = [-110,0]
+POS_TEXT_JOGAR = [445, 235]
+POS_TEXT_AJUDA = [260, 315]
+POS_TEXT_CREDITO = [425, 315]
+POS_TEXT_VOLTAR = [42, 535]
+POS_TEXT_TIT_TELA2 = [305,10]
+POS_TEXT_TIT_TELA3 = [250,10]
 POS_TEXT_BOTAO_PERM1 = [42, 305]
 POS_TEXT_BOTAO_PERM2 = [42, 318]
 POS_TEXT_BOTAO_PERM1_TELA1 = [247, 175]
 POS_TEXT_BOTAO_PERM2_TELA1 = [247, 188]
 
-
-#tamanho dos Botoes
+# tamanho dos Botoes
 BOTOES_TAMANHO = (160, 50)
-BOTAO_PERM_TAMANHO = (70, 70)
+BOTAO_PERM_TAMANHO = (70, 70) #botao redondo
 
-#textos Menu
+# textos Menu
 TEXT_JOGAR = 'Jogar'
 TEXT_AJUDA = 'Ajuda'
 TEXT_TELA2 = 'Ajuda'
@@ -66,16 +65,16 @@ TEXT_BOTAO_VOLTAR = 'Voltar'
 TEXT_BOTAO_PERM1 = 'Permanecer'
 TEXT_BOTAO_PERM2 = 'nesta tela'
 
-#fonts Menu
+# fonts Menu
 FONT_TITULO='DragonForcE'
 FONT_BOTOES= 'JMH_Typewriter'
 
-#tamanho da Fonte
+# tamanho da Fonte
 FONT_TITULO_TAMANHO = 110
 FONT_BOTOES_TAMANHO = 30
 FONT_BOTAO_PERM = 12
 
-#estados do cursor
+# estados do cursor
 BOTAO0= 'bot 0'
 BOTAO_JOGAR= 'bot 1'
 BOTAO_AJUDA= 'bot 2'
@@ -83,15 +82,15 @@ BOTAO_CREDITOS= 'bot 3'
 BOTAO_VOLTA= 'bot 4'
 
 
-#Estados do jogo (state_dict)
+# Estados do jogo (state_dict)
 MAIN_MENU = 'main menu'
 LOAD_SCREEN = 'load screen'
 TIME_OUT = 'time out'
 GAME_OVER = 'game over'
 LEVEL1 = 'level1'
 
-#telas do Menu
-
+# telas do Menu
 TELA1 = 'Menu'
 TELA2 = 'Ajuda'
 TELA3 = 'Creditos'
+
