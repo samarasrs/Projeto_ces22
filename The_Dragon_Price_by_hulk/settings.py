@@ -10,7 +10,7 @@ CALLUM = "callum.png"
 HEART = "heart.png"
 
 # Player properties
-PLAYER_ACC = 0.5
+git PLAYER_ACC = 0.8
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.8
 PLAYER_JUMP = 20
