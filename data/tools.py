@@ -5,7 +5,7 @@ import os
 keybinding = {
     'action': pg.K_s,
     'jump': pg.K_UP,
-    'left': pg.K_BACKSPACE,
+    'left': pg.K_LEFT,
     'right': pg.K_RIGHT,
     'down': pg.K_DOWN
 }
