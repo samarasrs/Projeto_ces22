@@ -5,7 +5,7 @@ TELA_LARGURA = 800
 TELA_TAMANHO = (TELA_LARGURA, TELA_ALTURA)
 
 # definindo titulo
-TITULO = "The Prince Dragon"
+TITULO = "The Dragon Prince "
 
 # definir as cores em RGB
 WHITE = (255, 255, 255)
@@ -94,3 +94,14 @@ TELA1 = 'Menu'
 TELA2 = 'Ajuda'
 TELA3 = 'Creditos'
 
+# Informação Level1
+
+
+SCORE = 'score'
+VIDAS = 'lives'
+CURRENT_TIME = 'current time'
+LEVEL_STATE = 'level state'
+CAMERA_INICIAL_X = 'camera start x'
+DEAD = 'dead'
+PODER_1 = 'poder 1'
+PODER_2 = 'poder 2'

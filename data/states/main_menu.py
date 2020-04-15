@@ -7,7 +7,14 @@ from .. import constants as c
 class Menu(tools._State):
     def __init__(self):
         tools._State.__init__(self)
-        persist = {}
+        persist = {c.SCORE: 0,
+                   c.VIDAS: 3,
+                   c.CURRENT_TIME: 0.0,
+                   c.LEVEL_STATE: None,
+                   c.CAMERA_INICIAL_X: 0,
+                   c.DEAD: False,
+                   c.PODER_1: 5,
+                   c.PODER_2: 0}
         self.startup(0.0, persist)
         self.keys = None
 
