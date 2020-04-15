@@ -4,7 +4,7 @@ from . import constants as c
 
 
 def main():
-    rodar_jogo = tools.Control(setup.TITULO)
+    rodar_jogo = tools.Control(setup.TITULO,c.MAIN_MENU)
     dicionario_estados = {
         c.MAIN_MENU: main_menu.Menu()
         }

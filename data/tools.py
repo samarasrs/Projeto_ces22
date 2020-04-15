@@ -1,5 +1,6 @@
 import pygame as pg
 import os
+from . import game_sound as gs
 
 # definindo as teclas a serem utilizadas no jogo
 keybinding = {
@@ -29,7 +30,6 @@ class _State(object):
         # dados necessarios para o estado atual (qnt de vidas, qnt de poder etc)
         self.persist = {}
 
-
     def get_event(self, event):
         pass
 
@@ -48,7 +48,7 @@ class _State(object):
 
 
 class Control(object):
-    def __init__(self,caption):
+    def __init__(self,caption,estado_inicial):
         self.caption = caption
         # obter uma referencia para uma superficie de exibição
         self.screen = pg.display.get_surface()
@@ -66,8 +66,10 @@ class Control(object):
         # variavel para armazenar a chave do estado
         self.state_name = None
         # variavel para armazenar o dado do estado
-        self.state = None
+        self.state = estado_inicial
         self.trocou = False
+        #criando o gerenciador de som
+        self.som = gs.Sound(self.state)
 
     def setup_states(self, state_dict, start_state):
         self.state_dict = state_dict
@@ -82,6 +84,7 @@ class Control(object):
             self.flip_state()
         # executa a função update do arquivo main_menu
         self.state.update(self.screen, self.keys, self.current_time)
+        self.som.update()
 
     def flip_state(self):
         previous, self.state_name = self.state_name, self.state.next
