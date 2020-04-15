@@ -15,7 +15,8 @@ class Menu(tools._State):
                    c.CAMERA_INICIAL_X: 0,
                    c.DEAD: False,
                    c.PODER_1: 5,
-                   c.PODER_2: 0}
+                   c.PODER_2: 0,
+                   c.EGG: False}
         self.startup(0.0, persist)
         self.keys = None
         #self.som = gs.Sound()

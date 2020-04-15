@@ -27,7 +27,11 @@ GOLD         = (255, 215,   0)
 
 
 # Fisica
-
+# Player properties
+PLAYER_ACC = 0.8
+PLAYER_FRICTION = -0.12
+PLAYER_GRAV = 0.8
+PLAYER_JUMP = 20
 
 
 # MENU
@@ -105,3 +109,4 @@ CAMERA_INICIAL_X = 'camera start x'
 DEAD = 'dead'
 PODER_1 = 'poder 1'
 PODER_2 = 'poder 2'
+EGG = 'egg'
