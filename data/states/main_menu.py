@@ -19,6 +19,7 @@ class Menu(tools._State):
         self.keys = None
 
     def startup(self, current_time, persist):
+        self.next = c.LEVEL1
         self.persist = persist
         self.setup_background()
         self.setup_botoes_default()
@@ -223,6 +224,8 @@ class Menu(tools._State):
                         elif self.cursor == c.BOTAO_CREDITOS:
                             self.tela = c.TELA3
                             self.setup_botoes_default()
+                        elif self.cursor == c.BOTAO_JOGAR:
+                            self.done = True
                         self.cursor = c.BOTAO0
 
     # Controla a tela Ajuda

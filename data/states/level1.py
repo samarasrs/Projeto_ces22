@@ -11,6 +11,14 @@ class Level1(tools._State):
     def startup(self, current_time, persist):
         self.game_info = persist
         self.setup_background()
+        self.setup_ground()
+        self.setup_teto()
+        self. setup_agua()
+        self.setup_gaiola()
+        self.setup_espinhos()
+        self.setup_espinhos()
+        self.setup_plataformas()
+        self.setup_pedras()
 
     def setup_background(self):
         self.background = setup.GFX['Map_jogo_teste']
@@ -128,12 +136,14 @@ class Level1(tools._State):
 
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
+        self.blit_tela(surface)
 
-    def update_camera(self):
+    #def update_camera(self):
 
 
     def blit_tela(self, surface):
         surface.blit(self.level, (0, 0), self.camera)
+        self.level.blit(self.background, self.camera, self.camera)
 
 
 
