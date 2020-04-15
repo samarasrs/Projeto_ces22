@@ -2,6 +2,7 @@
 import pygame as pg
 from .. import setup, tools
 from .. import constants as c
+from .. import game_sound as gs
 
 
 class Menu(tools._State):
@@ -10,6 +11,7 @@ class Menu(tools._State):
         persist = {}
         self.startup(0.0, persist)
         self.keys = None
+        #self.som = gs.Sound()
 
     def startup(self, current_time, persist):
         self.persist = persist
@@ -33,7 +35,6 @@ class Menu(tools._State):
         self.text_ajuda = self.setup_texto_botao(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
         self.text_creditos = self.setup_texto_botao(c.TEXT_CREDITO, c.FONT_BOTOES_TAMANHO)
         self.text_voltar = self.setup_texto_botao(c.TEXT_BOTAO_VOLTAR, c.FONT_BOTOES_TAMANHO)
-
 
     def setup_botao(self):
         self.botao = pg.transform.scale(setup.GFX['button_amarelo2'], c.BOTOES_TAMANHO)
@@ -76,9 +77,14 @@ class Menu(tools._State):
         self.cursor = c.BOTAO0
         self.tela = c.TELA1
 
+    def mover_cursor(self):
+        setup.SFX['menu_select'].play()
+        pg.time.wait(200)
+
     def update_cursor_tela1(self, keys):
         if self.cursor == c.BOTAO0:
             if keys[pg.K_DOWN]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_AJUDA
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_ajuda = self.setup_botao_selecionado()
@@ -86,6 +92,7 @@ class Menu(tools._State):
                 self.text_ajuda = self.setup_texto_botao_selecionado(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
 
             if keys[pg.K_RIGHT]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_JOGAR
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_jogar = self.setup_botao_selecionado()
@@ -94,6 +101,7 @@ class Menu(tools._State):
 
         elif self.cursor == c.BOTAO_JOGAR:
             if keys[pg.K_DOWN]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_CREDITOS
                 self.botao_jogar = self.setup_botao()
                 self.botao_creditos = self.setup_botao_selecionado()
@@ -102,6 +110,7 @@ class Menu(tools._State):
                 self.text_creditos = self.setup_texto_botao_selecionado(c.TEXT_CREDITO, c.FONT_BOTOES_TAMANHO)
 
             elif keys[pg.K_LEFT]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO0
                 self.botao_jogar = self.setup_botao()
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
@@ -110,6 +119,7 @@ class Menu(tools._State):
 
         elif self.cursor == c.BOTAO_CREDITOS:
             if keys[pg.K_UP]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_JOGAR
                 self.botao_creditos = self.setup_botao()
                 self.botao_jogar = self.setup_botao_selecionado()
@@ -118,6 +128,7 @@ class Menu(tools._State):
                 self.text_jogar = self.setup_texto_botao_selecionado(c.TEXT_JOGAR, c.FONT_BOTOES_TAMANHO)
 
             elif keys[pg.K_LEFT]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_AJUDA
                 self.botao_creditos = self.setup_botao()
                 self.botao_ajuda = self.setup_botao_selecionado()
@@ -127,6 +138,7 @@ class Menu(tools._State):
 
         elif self.cursor == c.BOTAO_AJUDA:
             if keys[pg.K_UP]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO0
                 self.botao_ajuda = self.setup_botao()
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
@@ -134,6 +146,7 @@ class Menu(tools._State):
                 self.text_ajuda = self.setup_texto_botao(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
 
             elif keys[pg.K_RIGHT]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_CREDITOS
                 self.botao_ajuda= self.setup_botao()
                 self.botao_creditos = self.setup_botao_selecionado()
@@ -141,10 +154,10 @@ class Menu(tools._State):
                 self.text_ajuda = self.setup_texto_botao(c.TEXT_AJUDA, c.FONT_BOTOES_TAMANHO)
                 self.text_creditos = self.setup_texto_botao_selecionado(c.TEXT_CREDITO, c.FONT_BOTOES_TAMANHO)
 
-
     def update_cursor_tela23(self, keys):
         if self.cursor == c.BOTAO0:
             if keys[pg.K_DOWN]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO_VOLTA
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_voltar = self.setup_botao_selecionado()
@@ -153,6 +166,7 @@ class Menu(tools._State):
 
         elif self.cursor == c.BOTAO_VOLTA:
             if keys[pg.K_UP]:
+                self.mover_cursor()
                 self.cursor = c.BOTAO0
                 self.botao_voltar = self.setup_botao()
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
@@ -170,7 +184,6 @@ class Menu(tools._State):
         surface.blit(self.text_ajuda, c.POS_TEXT_AJUDA)
         surface.blit(self.text_creditos, c.POS_TEXT_CREDITO)
 
-
     def blit_tela2(self, surface):
         surface.blit(self.background, c.POS_BACKGROUND)
         surface.blit(self.imagem, [0, 0])
@@ -178,7 +191,6 @@ class Menu(tools._State):
         surface.blit(self.botao_perm, c.POS_BOTAO_PERM)
         surface.blit(self.text_tela2, c.POS_TEXT_TIT_TELA2)
         surface.blit(self.text_voltar, c.POS_TEXT_VOLTAR)
-
 
     def blit_tela3(self, surface):
         surface.blit(self.background, c.POS_BACKGROUND)
@@ -188,7 +200,6 @@ class Menu(tools._State):
         surface.blit(self.text_tela3, c.POS_TEXT_TIT_TELA3)
         surface.blit(self.text_voltar, c.POS_TEXT_VOLTAR)
 
-
     def tela1(self, surface, keys):
         input_list = [pg.K_RETURN]
         if self.tela == c.TELA1:
@@ -197,6 +208,8 @@ class Menu(tools._State):
             if self.cursor != c.BOTAO0:
                 for input in input_list:
                     if keys[input]:
+                        setup.SFX['menu_entrar'].play()
+                        pg.time.wait(500)
                         if self.cursor == c.BOTAO_AJUDA:
                             self.tela = c.TELA2
                             self.setup_botoes_default()
@@ -213,6 +226,8 @@ class Menu(tools._State):
             if self.cursor != c.BOTAO0:
                 for input in input_list:
                     if keys[input]:
+                        setup.SFX['menu_entrar'].play()
+                        pg.time.wait(500)
                         if self.cursor == c.BOTAO_VOLTA:
                             self.tela = c.TELA1
                             self.setup_botoes_default()
@@ -226,6 +241,8 @@ class Menu(tools._State):
             if self.cursor != c.BOTAO0:
                 for input in input_list:
                     if keys[input]:
+                        setup.SFX['menu_entrar'].play()
+                        pg.time.wait(500)
                         if self.cursor == c.BOTAO_VOLTA:
                             self.tela = c.TELA1
                             self.setup_botoes_default()
