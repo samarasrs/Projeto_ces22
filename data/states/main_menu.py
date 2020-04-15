@@ -8,12 +8,20 @@ from .. import game_sound as gs
 class Menu(tools._State):
     def __init__(self):
         tools._State.__init__(self)
-        persist = {}
+        persist = {c.SCORE: 0,
+                   c.VIDAS: 3,
+                   c.CURRENT_TIME: 0.0,
+                   c.LEVEL_STATE: None,
+                   c.CAMERA_INICIAL_X: 0,
+                   c.DEAD: False,
+                   c.PODER_1: 5,
+                   c.PODER_2: 0}
         self.startup(0.0, persist)
         self.keys = None
         #self.som = gs.Sound()
 
     def startup(self, current_time, persist):
+        self.next = c.LEVEL1
         self.persist = persist
         self.setup_background()
         self.setup_botoes_default()
@@ -233,6 +241,8 @@ class Menu(tools._State):
                         elif self.cursor == c.BOTAO_CREDITOS:
                             self.tela = c.TELA3
                             self.setup_botoes_default()
+                        elif self.cursor == c.BOTAO_JOGAR:
+                            self.done = True
                         self.cursor = c.BOTAO0
 
     # Controla a tela Ajuda
