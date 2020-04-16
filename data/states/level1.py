@@ -17,12 +17,13 @@ class Level1(tools._State):
         self.setup_background()
         self.setup_ground()
         self.setup_teto()
-        self. setup_agua()
+        self.setup_agua()
         self.setup_gaiola()
         self.setup_espinhos()
         self.setup_espinhos()
         self.setup_plataformas()
         self.setup_pedras()
+
 
 
         self.new()
@@ -33,7 +34,8 @@ class Level1(tools._State):
 
         self.player = callum.Player(self)
         self.all_sprites.add(self.player)
-        self.platforms = pg.sprite.Group()
+        #self.platforms = pg.sprite.Group()
+
 
     """def run(self):
         # Game Loop
@@ -68,6 +70,9 @@ class Level1(tools._State):
 
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
+        self.ground_rect1 = ground_rect1
+        #ground_rect1 = obstaculo.Obstaculo(0, 600, 175, 107)
+        #ground_rect1.rect.fill(c.RED)
         ground_rect2 = obstaculo.Obstaculo(172.4, 388, 178, 212)
         ground_rect3 = obstaculo.Obstaculo(591, 378, 104, 222)
         ground_rect4 = obstaculo.Obstaculo(596, 274, 180, 326)
@@ -104,6 +109,7 @@ class Level1(tools._State):
                                             ground_rect26, ground_rect27, ground_rect8)
         for sprite in self.group_ground:
             self.all_sprites.add(sprite)
+
     def setup_teto(self):
         teto_rect1 = obstaculo.Obstaculo(0, 0, 173, 246)
         teto_rect2 = obstaculo.Obstaculo(173, 0, 776, 103)
@@ -131,7 +137,6 @@ class Level1(tools._State):
 
         for sprite in self.group_teto:
             self.all_sprites.add(sprite)
-
 
     def setup_agua(self):
         agua_rect1 = obstaculo.Obstaculo(1547, 566, 354, 34)
@@ -205,7 +210,25 @@ class Level1(tools._State):
         for sprite in self.group_pedra:
             self.all_sprites.add(sprite)
 
+    def check_callum_y_colide(self):
+        ground_plataforma = pg.sprite.spritecollideany(self.player,self.group_ground)
 
+        if ground_plataforma:
+            self.ajustar_callum_y(ground_plataforma)
+
+    def ajustar_callum_y(self,collider):
+        print("ground ")
+        print( collider.rect.top)
+        print("player ")
+        print(self.player.rect.bottom)
+        if collider.rect.top < (self.player.pos.y+1000):
+            print("colidiu")
+            self.player.vel.y = 0
+            self.player.pos.y = collider.rect.top-55
+            print("groundcolisao ")
+            print( collider.rect.top)
+            print("playercolisao ")
+            print(self.player.rect.bottom)
 
     def blit_tela(self, surface):
         surface.blit(self.level, (0, 0), self.camera)
@@ -216,13 +239,15 @@ class Level1(tools._State):
 
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
+        
+        self.check_callum_y_colide()
         self.blit_tela(surface)
-
+        #pg.draw.rect(surface,c.RED,self.ground_rect1.rect)
         self.player.update(self.current_time)
         self.events()
 
         # check if callum hits a platform if falling
-        if self.player.vel.y > 0:
+        '''if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
                 print("hitou")
@@ -235,7 +260,7 @@ class Level1(tools._State):
                     if self.player.pos.y < lowest.rect.bottom:
                         self.player.pos.y = hits[0].rect.top
                         self.player.vel.y = 0
-                        self.player.jumping = False
+                        self.player.jumping = False'''
 
 
 
@@ -267,7 +292,7 @@ class Level1(tools._State):
                 if event.key == pg.K_DOWN:
                     self.player.crouch_cut()"""
 
-    def draw(self):
+    '''def draw(self):
         # Game Loop - draw
 
         #setup.TELA.fill(c.BGCOLOR)
@@ -277,7 +302,7 @@ class Level1(tools._State):
         #self.player.show_heart()
         # self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 20)
         # *after* drawing everything, flip the display
-        pg.display.flip()
+        pg.display.flip()'''
 
 
 
