@@ -121,6 +121,7 @@ class Control(object):
             self.clock.tick(self.fps)
 
 
+
 def load_all_gfx(directory, colorkey=(255, 0, 255), accept=('.png', 'jpg', 'bmp')):
     graphics = {}
     for pic in os.listdir(directory):

@@ -110,3 +110,6 @@ DEAD = 'dead'
 PODER_1 = 'poder 1'
 PODER_2 = 'poder 2'
 EGG = 'egg'
+
+
+

@@ -1,6 +1,9 @@
 import pygame as pg
 from .. import setup, tools
 from .. import constants as c
+from os import path
+vec = pg.math.Vector2
+
 
 class Spritesheet:
     # Carrega os sprites
@@ -40,87 +43,94 @@ class Player(pg.sprite.Sprite):
         self.last_update = 0
         self.load_images()
         #self.image = self.standing_frames[0]
-        self.image = self.game.spritesheet_player.get_image(68, 41, 20, 20, True)
-        self.image.set_colorkey(WHITE)
+        self.image = self.get_image(68, 41, 20, 20)
+        self.image.set_colorkey(c.WHITE)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        self.pos = vec(40, HEIGHT - 100)
+        #self.rect.center = (c.TELA_LARGURA / 2, c.TELA_ALTURA / 2)
+        self.pos = vec(40, c.TELA_ALTURA - 230)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
     def show_heart(self):
         self.heart_image = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
-        self.heart_image.set_colorkey(BLACK)
+        self.heart_image.set_colorkey(c.BLACK)
         self.heart_rect = self.heart_image.get_rect()
         self.heart_rect.x = 0
         self.heart_rect.y = 0
         self.game.screen.blit(self.heart_image, self.heart_rect)
         if self.life_number > 1:
             self.heart_image2 = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
-            self.heart_image2.set_colorkey(BLACK)
+            self.heart_image2.set_colorkey(c.BLACK)
             self.heart_rect2 = self.heart_image2.get_rect()
             self.heart_rect2.x = 49
             self.heart_rect2.y = 0
             self.game.screen.blit(self.heart_image2, self.heart_rect2)
         if self.life_number > 2:
             self.heart_image3 = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
-            self.heart_image3.set_colorkey(BLACK)
+            self.heart_image3.set_colorkey(c.BLACK)
             self.heart_rect3 = self.heart_image3.get_rect()
             self.heart_rect3.x = 98
             self.heart_rect3.y = 0
             self.game.screen.blit(self.heart_image3, self.heart_rect3)
 
 
+    def get_image(self, x, y, width, height):
+        self.dir = path.dirname(__file__)
+        img_dir = path.join('resources', 'graphics')
+        image = pg.Surface((width, height))
+        image.blit(pg.image.load(path.join(img_dir, 'callum.png')).convert(), (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image, (width * 3, height * 3))
+        return image
+
 
     def load_images(self):
 
-        self.life_heart_frame = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
-        self.standing_frames = [self.game.spritesheet_player.get_image(68, 10, 20, 21, True)]
+        #self.life_heart_frame = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
+        self.standing_frames = [self.get_image(68, 10, 20, 21, )]
         for frame in self.standing_frames:
-            frame.set_colorkey(WHITE)
-        self.walking_normal_frames_r = [self.game.spritesheet_player.get_image(5, 42, 20, 20, True),
-                               self.game.spritesheet_player.get_image(35, 40, 20, 20, True),
-                               self.game.spritesheet_player.get_image(68, 41, 20, 20, True),
-                               self.game.spritesheet_player.get_image(100, 43, 20, 20, True),
-                               self.game.spritesheet_player.get_image(132, 42, 20, 20, True),
-                               self.game.spritesheet_player.get_image(164, 40, 20, 20, True)]
+            frame.set_colorkey(c.WHITE)
+        self.walking_normal_frames_r = [self.get_image(5, 42, 20, 20),
+                                        self.get_image(35, 40, 20, 20),
+                                        self.get_image(68, 41, 20, 20),
+                                        self.get_image(100, 43, 20, 20),
+                                        self.get_image(132, 42, 20, 20),
+                                        self.get_image(164, 40, 20, 20)]
         self.walking_normal_frames_l = []
         for frame in self.walking_normal_frames_r:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
             self.walking_normal_frames_l.append(pg.transform.flip(frame, True, False))
-        self.jump_frame = self.game.spritesheet_player.get_image(293, 11, 18, 20, True)
-        self.jump_frame.set_colorkey(WHITE)
+        self.jump_frame = self.get_image(293, 11, 18, 20)
+        self.jump_frame.set_colorkey(c.WHITE)
 
         self.dying_frames = [
-                               self.game.spritesheet_player.get_image(36, 202, 20, 21, True),
-                               self.game.spritesheet_player.get_image(65, 201, 25, 25, True),]
+            self.get_image(36, 202, 20, 21),
+            self.get_image(65, 201, 25, 25)]
 
         for frame in self.dying_frames:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
 
-        self.attacking_frames_r = [self.game.spritesheet_player.get_image(4, 203, 20, 20, True),
-                                   self.game.spritesheet_player.get_image(33, 203, 25, 20, True),
-                                   self.game.spritesheet_player.get_image(65, 200, 25, 25, True),
-                                   self.game.spritesheet_player.get_image(100, 203, 20, 20, True)]
+        self.attacking_frames_r = [self.get_image(4, 203, 20, 20),
+                                   self.get_image(33, 203, 25, 20),
+                                   self.get_image(65, 200, 25, 25),
+                                   self.get_image(100, 203, 20, 20)]
         for frame in self.attacking_frames_r:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
 
         self.attacking_frames_l = []
         for frame in self.attacking_frames_r:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
             self.attacking_frames_l.append(pg.transform.flip(frame, True, False))
         self.crouching_frames_r = [
-                                self.game.spritesheet_player.get_image(134, 501, 21, 11, True),
-                                self.game.spritesheet_player.get_image(165, 501, 21, 11, True),
-                                self.game.spritesheet_player.get_image(197, 501, 21, 11, True)]
+            self.get_image(134, 501, 21, 11),
+            self.get_image(165, 501, 21, 11),
+            self.get_image(197, 501, 21, 11)]
         for frame in self.crouching_frames_r:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
 
         self.crouching_frames_l = []
         for frame in self.crouching_frames_r:
-            frame.set_colorkey(WHITE)
+            frame.set_colorkey(c.WHITE)
             self.crouching_frames_l.append(pg.transform.flip(frame, True, False))
-
 
     def jump_cut(self):
         if self.jumping:
@@ -129,12 +139,13 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         # jump only if standing on a platform
+
         self.rect.y += 2
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.y -= 2
         if hits and not self.jumping:
             self.jumping = True
-            self.vel.y = -PLAYER_JUMP
+            self.vel.y = -c.PLAYER_JUMP
 
     def Crouch(self):
         # Crouch only if standing on a platform
@@ -152,27 +163,28 @@ class Player(pg.sprite.Sprite):
         if self.crouching:
             self.crouching = False
 
-    def update(self, surface, keys, current_time):
+    def update(self, current_time):
         self.animate(current_time)
 
-        self.acc = vec(0, PLAYER_GRAV)
+        self.acc = vec(0, c.PLAYER_GRAV)
+        keys = pg.key.get_pressed()
         if keys[pg.K_LEFT]:
-            self.acc.x = -PLAYER_ACC
+            self.acc.x = -c.PLAYER_ACC
         if keys[pg.K_RIGHT]:
-            self.acc.x = PLAYER_ACC
+            self.acc.x = c.PLAYER_ACC
 
         # apply friction
-        self.acc.x += self.vel.x * PLAYER_FRICTION
+        self.acc.x += self.vel.x * c.PLAYER_FRICTION
         # equations of motion
         self.vel += self.acc
         if abs(self.vel.x) < 0.1:
             self.vel.x = 0
         self.pos += self.vel + 0.5 * self.acc
         # wrap around the sides of the screen
-        if self.pos.x > WIDTH + self.rect.width / 2:
+        if self.pos.x > c.TELA_LARGURA + self.rect.width / 2:
             self.pos.x = 0 - self.rect.width / 2
         if self.pos.x < 0 - self.rect.width / 2:
-            self.pos.x = WIDTH + self.rect.width / 2
+            self.pos.x = c.TELA_LARGURA + self.rect.width / 2
 
         self.rect.midbottom = self.pos
 
