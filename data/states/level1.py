@@ -11,6 +11,8 @@ class Level1(tools._State):
     def __init__(self):
         tools._State.__init__(self)
         self.all_sprites = pg.sprite.Group()
+        self.testepycharm = pg.sprite.Group()
+
 
     def startup(self, current_time, persist):
         self.game_info = persist
