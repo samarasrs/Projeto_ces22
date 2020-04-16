@@ -30,7 +30,7 @@ GOLD         = (255, 215,   0)
 # Player properties
 PLAYER_ACC = 0.8
 PLAYER_FRICTION = -0.12
-PLAYER_GRAV = 0.8
+PLAYER_GRAV = 0.02
 PLAYER_JUMP = 20
 
 
@@ -110,3 +110,6 @@ DEAD = 'dead'
 PODER_1 = 'poder 1'
 PODER_2 = 'poder 2'
 EGG = 'egg'
+
+
+
