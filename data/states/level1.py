@@ -150,8 +150,11 @@ class Level1(tools._State):
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
+        pedras = pg.sprite.spritecollideany(self.callum, self.group_pedra)
         if collider:
             self.adjust_callum_position_for_x_collision(collider)
+        elif pedras:
+            self.adjust_callum_position_for_x_collision(pedras)
         elif teto:
             self.adjust_callum_position_for_x_collision(teto)
 

@@ -94,7 +94,7 @@ class Game_Over(tools._State):
             if keys[pg.K_DOWN]:
                 self.mover_cursor()
                 self.cursor = c.BOTAO_SIM
-                self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
+                self.botao_perm2 = self.botao = pg.transform.scale(setup.GFX['circulo_amarelo'], c.BOTAO_PERM_TAMANHO)
                 self.botao_sim = self.setup_botao_selecionado()
 
                 self.text_sim = self.setup_texto_botao_selecionado(c.TEXT_SIM, c.FONT_BOTOES_TAMANHO)
@@ -104,7 +104,7 @@ class Game_Over(tools._State):
                 self.mover_cursor()
                 self.cursor = c.BOTAO0
                 self.botao_sim = self.setup_botao()
-                self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
+                self.botao_perm2 = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_sim = self.setup_texto_botao(c.TEXT_SIM, c.FONT_BOTOES_TAMANHO)
             elif keys[pg.K_RIGHT]:
@@ -121,10 +121,12 @@ class Game_Over(tools._State):
                 self.mover_cursor()
                 self.cursor = c.BOTAO0
                 self.botao_nao = self.setup_botao()
-                self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
+                self.botao_perm2 =  pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_nao = self.setup_texto_botao(c.TEXT_NAO, c.FONT_BOTOES_TAMANHO)
             elif keys[pg.K_LEFT]:
+                self.mover_cursor()
+                self.cursor = c.BOTAO_SIM
                 self.botao_nao = self.setup_botao()
                 self.botao_sim = self.setup_botao_selecionado()
 
@@ -147,6 +149,7 @@ class Game_Over(tools._State):
     def tela(self, surface, keys):
         input_list = [pg.K_RETURN]
         self.update_cursor_tela_game_over(keys)
+        print(self.cursor)
         self.blit_tela(surface)
          # se o cursor estiver em uma posição diferente do botao auxiliar (redondo) e for
         # pressionada a tecla enter troca de tela
