@@ -266,6 +266,7 @@ class Level1(tools._State):
             mult = 1
             new = self.camera.x + mult * self.callum.vel.x
             self.camera.x = new
+            print("teste")
 
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
