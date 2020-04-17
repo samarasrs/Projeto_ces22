@@ -262,6 +262,11 @@ class Level1(tools._State):
             highest = self.level_rect.w - self.camera.w
             self.camera.x = min(highest, new)
 
+        if self.callum.vel.x < 0 and self.callum.rect.left < third and self.camera.x > self.camera.w // 3:
+            mult = 1
+            new = self.camera.x + mult * self.callum.vel.x
+            self.camera.x = new
+
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
         self.adjust_sprites_positions()
