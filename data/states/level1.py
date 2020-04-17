@@ -10,6 +10,7 @@ class Level1(tools._State):
 
     def startup(self, current_time, persist):
         self.game_info = persist
+        self.game_info[c.CURRENT_TIME] = current_time
         self.setup_background()
         self.setup_ground()
         self.setup_teto()
@@ -20,6 +21,7 @@ class Level1(tools._State):
         self.setup_plataformas()
         self.setup_pedras()
         self.setup_callum()
+        self.setup_spritegroups()
 
     def setup_callum(self):
         self.callum = callum2.Callum()
@@ -142,6 +144,7 @@ class Level1(tools._State):
 
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
+        self.update_all_sprites(keys)
         self.blit_tela(surface)
 
     def update_camera(self):
@@ -149,9 +152,9 @@ class Level1(tools._State):
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
 
-        if self.callum.x_vel > 0 and callum_center >= third:
+        if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
-            new = self.camera.x + mult * self.callum.x_vel
+            new = self.camera.x + mult * self.callum.vel.x
             highest = self.level_rect.w - self.camera.w
             self.camera.x = min(highest, new)
 
@@ -161,7 +164,6 @@ class Level1(tools._State):
 
     def adjust_sprites_positions(self):
         self.adjust_callum_position()
-
 
     def adjust_callum_position(self):
         self.last_x_position = self.callum.rect.right

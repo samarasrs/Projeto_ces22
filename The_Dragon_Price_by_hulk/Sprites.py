@@ -83,8 +83,8 @@ class Player(pg.sprite.Sprite):
 
         self.life_heart_frame = self.game.spritesheet_heart.get_image(0, 0, 16, 16, True)
         self.standing_frames = [self.game.spritesheet_player.get_image(68, 10, 20, 21, True)]
-        #for frame in self.standing_frames:
-            #frame.set_colorkey(WHITE)
+        for frame in self.standing_frames:
+            frame.set_colorkey(WHITE)
         self.walking_normal_frames_r = [self.game.spritesheet_player.get_image(5, 42, 20, 20, True),
                                self.game.spritesheet_player.get_image(35, 40, 20, 20, True),
                                self.game.spritesheet_player.get_image(68, 41, 20, 20, True),

@@ -9,7 +9,7 @@ class Callum(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['callum']
         self.state = c.STAND
-        self.state_ant = None
+        self.state_ant = c.STAND
         self.walking_timer = 0
         self.jumping_timer = 0
         self.current_frame = 0
@@ -21,16 +21,12 @@ class Callum(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
 
-
     def get_image(self, x, y, width, height):
         # Pega imagem do arquivo filename
         image = pg.Surface((width, height))
         rect = image.get_rect()
 
         image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
-        # faz com que os pixels da cor do argumento da figura nao fiquem transparentes
-        #image.set_colorkey((47, 47, 46))
-        image.set_colorkey(c.WHITE)
         image = pg.transform.scale(image,
                                    (int(rect.width * c.SIZE_MULTIPLIER),
                                     int(rect.height * c.SIZE_MULTIPLIER)))
@@ -46,7 +42,8 @@ class Callum(pg.sprite.Sprite):
 
     def load_images(self):
         self.standing_frames = [self.get_image(68, 10, 20, 21)]
-
+        for frame in self.standing_frames:
+            frame.set_colorkey(c.BLACK)
         self.walking_normal_frames_r = [self.get_image(5, 42, 20, 20),
                                self.get_image(35, 40, 20, 20),
                                self.get_image(68, 41, 20, 20),
@@ -56,6 +53,7 @@ class Callum(pg.sprite.Sprite):
 
         self.walking_normal_frames_l = []
         for frame in self.walking_normal_frames_r:
+            frame.set_colorkey(c.BLACK)
             self.walking_normal_frames_l.append(pg.transform.flip(frame, True, False))
 
         self.jump_frame_r = [self.get_image(68, 168, 19, 23),
@@ -64,10 +62,13 @@ class Callum(pg.sprite.Sprite):
                              self.get_image(163, 172, 21, 21)]
         self.jump_frame_l = []
         for frame in self.jump_frame_r:
+            frame.set_colorkey(c.BLACK)
             self.jump_frame_l.append(pg.transform.flip(frame, True, False))
 
 
         self.dying_frames_r = [self.get_image(241, 167, 23, 17)]
+        for frame in self.dying_frames_r:
+            frame.set_colorkey(c.BLACK)
         self.dying_frames_l = [pg.transform.flip(self.get_image(241, 167, 23, 17), True, False)]
 
     def check_to_allow_jump(self, keys):
@@ -92,6 +93,7 @@ class Callum(pg.sprite.Sprite):
         if 0 <= self.vel.y < self.max_y_vel:
             self.gravity = c.GRAVITY
             self.state = c.FALL
+            self.state_ant = c.JUMP
 
         if keys[tools.keybinding['left']]:
             if abs(self.vel.x) < self.max_x_vel:
@@ -104,25 +106,31 @@ class Callum(pg.sprite.Sprite):
         if not keys[tools.keybinding['jump']]:
             self.gravity = c.GRAVITY
             self.state = c.FALL
+            self.state_ant = c.JUMP
 
     def walking(self, keys):
         self.check_to_allow_jump(keys)
         if self.state_ant == c.STAND:
-            self.state_ant = None
+            self.state_ant = c.WALK
             self.walking_timer = self.current_time
             self.current_frame = 0
         else:
             if (self.current_time - self.walking_timer >
                     self.calculate_animation_speed()):
                 self.current_frame = (self.current_frame + 1) % len(self.walking_normal_frames_r)
-
+        print(self.state)
+        print(self.state_ant)
         if keys[tools.keybinding['jump']]:
             if self.allow_jump:
                 self.state = c.JUMP
+                self.state_ant = c.WALK
                 if self.vel.x > 4.5 or self.vel.x < -4.5:
                     self.vel.y = c.JUMP_VEL - .5
                 else:
                     self.vel.y = c.JUMP_VEL
+            print(self.state)
+            print(self.state_ant)
+            print(self.vel.y)
 
         if keys[tools.keybinding['left']]:
             self.image = self.walking_normal_frames_l[self.current_frame]
@@ -132,7 +140,7 @@ class Callum(pg.sprite.Sprite):
                     self.vel.x= -0.5
             elif abs(self.vel.x) > self.max_x_vel:
                 self.vel.x += self.x_accel
-
+            print(self.vel.x)
         elif keys[tools.keybinding['right']]:
             self.image = self.walking_normal_frames_r[self.current_frame]
             if self.vel.x < self.max_x_vel:
@@ -141,21 +149,26 @@ class Callum(pg.sprite.Sprite):
                     self.vel.x= 0.5
             elif abs(self.vel.x) > self.max_x_vel:
                 self.vel.x -= self.x_accel
-
+            print(self.vel.x)
         else:
-            if self.x_vel > 0:
+            if self.vel.x > 0:
                 self.image = self.walking_normal_frames_r[self.current_frame]
-                self.x_vel -= self.x_accel
+                self.vel.x -= self.x_accel
+                print(self.vel.x)
             else:
-                self.x_vel = 0
+                self.vel.x = 0
                 self.state = c.STAND
+                self.state_ant = c.WALK
 
-            if self.x_vel < 0:
+            if self.vel.x < 0:
                 self.image = self.walking_normal_frames_l[self.current_frame]
-                self.x_vel += self.x_accel
+                self.vel.x += self.x_accel
+                print(self.vel.x)
+
             else:
-                self.x_vel = 0
+                self.vel.x = 0
                 self.state = c.STAND
+                self.state_ant = c.WALK
 
     def standing(self, keys):
         self.check_to_allow_jump(keys)
@@ -168,6 +181,7 @@ class Callum(pg.sprite.Sprite):
         elif keys[tools.keybinding['jump']]:
             if self.allow_jump:
                 self.state = c.JUMP
+                self.state_ant = c.STAND
                 self.vel.y = c.JUMP_VEL
         else:
             self.state = c.STAND
@@ -185,12 +199,12 @@ class Callum(pg.sprite.Sprite):
                 self.vel.x += self.x_accel
 
     def calculate_animation_speed(self):
-        if self.x_vel == 0:
+        if self.vel.x== 0:
             animation_speed = 130
-        elif self.x_vel > 0:
-            animation_speed = 130 - (self.x_vel * (13))
+        elif self.vel.x > 0:
+            animation_speed = 130 - (self.vel.x * (13))
         else:
-            animation_speed = 130 - (self.x_vel * (13) * -1)
+            animation_speed = 130 - (self.vel.x * (13) * -1)
         return animation_speed
 
     def dead(self):
