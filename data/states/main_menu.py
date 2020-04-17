@@ -37,7 +37,7 @@ class Menu(tools._State):
     # cria os botoes e os textos dos botoes como eles devem aparecer quando a cada tela é carregada
     # botao redondo selecionado e demais normal (amarelos)
     def setup_botoes_default(self):
-        self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
+        self.botao_perm  = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
         self.botao_jogar = self.setup_botao()
         self.botao_ajuda = self.setup_botao()
         self.botao_creditos = self.setup_botao()

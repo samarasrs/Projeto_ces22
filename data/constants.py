@@ -64,6 +64,9 @@ POS_BOTAO_AJUDA = [230, 310]
 POS_BOTAO_CREDITO = [410,310]
 POS_BOTAO_VOLTAR = [10, 530]
 POS_BOTAO_PERM = [50, 440]
+POS_BOTAO_SIM = [230, 500]
+POS_BOTAO_NAO = [410, 500]
+POS_BOTA0_PERM2 = [365, 410]
 POS_BACKGROUND = [-110,0]
 POS_TEXT_JOGAR = [445, 235]
 POS_TEXT_AJUDA = [260, 315]
@@ -75,6 +78,10 @@ POS_TEXT_BOTAO_PERM1 = [42, 305]
 POS_TEXT_BOTAO_PERM2 = [42, 318]
 POS_TEXT_BOTAO_PERM1_TELA1 = [247, 175]
 POS_TEXT_BOTAO_PERM2_TELA1 = [247, 188]
+POS_TEXT_GAME_OVER = [250, 250]
+POS_TEXT_DESEJA = [100, 400]
+POS_TEXT_SIM = [285, 505]
+POS_TEXT_NAO = [465, 505]
 
 # tamanho dos Botoes
 BOTOES_TAMANHO = (160, 50)
@@ -89,6 +96,10 @@ TEXT_CREDITO = 'Créditos'
 TEXT_BOTAO_VOLTAR = 'Voltar'
 TEXT_BOTAO_PERM1 = 'Permanecer'
 TEXT_BOTAO_PERM2 = 'nesta tela'
+TEXT_GAME_OVER = 'GAME OVER'
+TEXT_DESEJA = 'Deseja jogar novamente?'
+TEXT_SIM = 'SIM'
+TEXT_NAO = 'NÃO'
 
 # fonts Menu
 FONT_TITULO='DragonForcE'
@@ -105,6 +116,8 @@ BOTAO_JOGAR= 'bot 1'
 BOTAO_AJUDA= 'bot 2'
 BOTAO_CREDITOS= 'bot 3'
 BOTAO_VOLTA= 'bot 4'
+BOTAO_SIM = 'bot 1'
+BOTAO_NAO = 'bot 2'
 
 
 # Estados do jogo (state_dict)
@@ -127,7 +140,7 @@ VIDAS = 'lives'
 CURRENT_TIME = 'current time'
 LEVEL_STATE = 'level state'
 CAMERA_INICIAL_X = 'camera start x'
-DEAD = 'dead'
+CALLUM_DEAD = 'dead'
 PODER_1 = 'poder 1'
 PODER_2 = 'poder 2'
 EGG = 'egg'

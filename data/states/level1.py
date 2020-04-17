@@ -11,6 +11,7 @@ class Level1(tools._State):
     def startup(self, current_time, persist):
         self.game_info = persist
         self.game_info[c.CURRENT_TIME] = current_time
+        self.game_info[c.CALLUM_DEAD] = False
         self.setup_background()
         self.setup_ground()
         self.setup_teto()
@@ -22,7 +23,9 @@ class Level1(tools._State):
         self.setup_pedras()
         self.setup_callum()
         self.setup_spritegroups()
+        self.end_game()
 
+# SETUPS
     def setup_callum(self):
         self.callum = callum2.Callum()
         self.callum.rect.x = self.camera.x + 90
@@ -41,12 +44,12 @@ class Level1(tools._State):
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
         ground_rect2 = obstaculo.Obstaculo(172.4, 388, 178, 212)
-        ground_rect3 = obstaculo.Obstaculo(591, 378, 104, 222)
-        ground_rect4 = obstaculo.Obstaculo(596, 274, 180, 326)
-        ground_rect5 = obstaculo.Obstaculo(913, 238, 214, 362)
-        ground_rect6 = obstaculo.Obstaculo(1055, 143, 706, 32)
-        ground_rect8 = obstaculo.Obstaculo(6937, 324, 2088, 276)
-        ground_rect7 = obstaculo.Obstaculo(1055, 143, 33, 90)
+        ground_rect3 = obstaculo.Obstaculo(172.4, 388, 178, 212)
+        ground_rect4 = obstaculo.Obstaculo(491, 385, 104, 222)
+        ground_rect5 = obstaculo.Obstaculo(596, 283, 180, 319)
+        ground_rect6 = obstaculo.Obstaculo(913, 238, 214, 362)
+        ground_rect7 = obstaculo.Obstaculo(1055, 143, 706, 32)
+        ground_rect8 = obstaculo.Obstaculo(1055, 143, 33, 90)
         ground_rect9 = obstaculo.Obstaculo(1127, 529, 422, 71)
         ground_rect10 = obstaculo.Obstaculo(1301, 496, 106, 104)
         ground_rect11 = obstaculo.Obstaculo(1897, 495, 109, 105)
@@ -66,14 +69,16 @@ class Level1(tools._State):
         ground_rect25 = obstaculo.Obstaculo(5586, 416, 186, 184)
         ground_rect26 = obstaculo.Obstaculo(5591, 398, 47, 202)
         ground_rect27 = obstaculo.Obstaculo(6241, 397, 692, 203)
+        ground_rect28 = obstaculo.Obstaculo(6937, 324, 2088, 276)
 
         self.group_ground = pg.sprite.Group(ground_rect1, ground_rect2, ground_rect3, ground_rect4,
-                                            ground_rect5, ground_rect6, ground_rect7, ground_rect9,
+                                            ground_rect5, ground_rect6, ground_rect7, ground_rect8,
+                                            ground_rect9,
                                             ground_rect10, ground_rect11, ground_rect12, ground_rect13,
                                             ground_rect14, ground_rect15, ground_rect16, ground_rect17,
                                             ground_rect18, ground_rect19, ground_rect20, ground_rect21,
                                             ground_rect22, ground_rect23, ground_rect24, ground_rect25,
-                                            ground_rect26, ground_rect27, ground_rect8)
+                                            ground_rect26, ground_rect27, ground_rect28)
 
     def setup_teto(self):
         teto_rect1 = obstaculo.Obstaculo(0, 0, 173, 246)
@@ -142,10 +147,98 @@ class Level1(tools._State):
         self.group_pedra = pg.sprite.Group(pedra_rect1, pedra_rect2, pedra_rect3, pedra_rect4,
                                            pedra_rect5, pedra_rect6, pedra_rect7, pedra_rect8)
 
+# CHECKS
+    def check_callum_x_collisions(self):
+        collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
+        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
+        if collider:
+            self.adjust_callum_position_for_x_collision(collider)
+        elif teto:
+            self.adjust_callum_position_for_x_collision(teto)
+
+    def check_callum_y_collisions(self):
+        ground = pg.sprite.spritecollideany(self.callum, self.group_ground)
+        plataforma = pg.sprite.spritecollideany(self.callum, self.group_plataforma)
+        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
+        agua = pg.sprite.spritecollideany(self.callum, self.group_agua)
+        espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
+
+        if ground:
+            self.adjust_callum_position_for_y_collision_ground(ground)
+        elif plataforma:
+            self.adjust_callum_position_for_y_collision_plataforma(plataforma)
+        elif teto:
+            self.adjust_callum_position_for_y_collision_teto(teto)
+        elif agua or espinho:
+            self.game_info[c.CALLUM_DEAD] = True
+        if ground == None and plataforma == None:
+            if self.callum.state != c.JUMP and self.callum.state != c.DEAD:
+                self.callum.state = c.FALL
+
+    def check_callum_dead(self):
+        if self.callum.rect.y > c.TELA_ALTURA:
+            self.game_info[c.CALLUM_DEAD] = True
+            self.callum.state = c.DEAD
+
+# AJUSTES
+
+    def adjust_sprites_positions(self):
+        self.adjust_callum_position()
+
+    def adjust_callum_position(self):
+        self.last_x_position = self.callum.rect.right
+        self.callum.rect.x += round(self.callum.vel.x)
+        self.check_callum_x_collisions()
+        self.callum.rect.y += round(self.callum.vel.y)
+        self.check_callum_y_collisions()
+        if self.callum.rect.x < (self.camera.x + 5):
+            self.callum.rect.x = (self.camera.x + 5)
+
+    def adjust_callum_position_for_x_collision(self, collider):
+        if self.callum.rect.x < collider.rect.x:
+            self.callum.rect.right = collider.rect.left
+        else:
+            self.callum.rect.left = collider.rect.right
+            self.callum.x_vel = 0
+
+    def adjust_callum_position_for_y_collision_teto(self, collider):
+        if self.callum.rect.y > collider.rect.y:
+            self.callum.rect.top = collider.rect.bottom
+            self.callum.vel.y = 7
+            self.callum.state = c.FALL
+
+    def adjust_callum_position_for_y_collision_ground(self, collider):
+        if collider.rect.bottom > self.callum.rect.bottom:
+            self.callum.vel.y = 0
+            self.callum.rect.bottom = collider.rect.top
+            self.callum.state = c.WALK
+        elif collider.rect.top < self.callum.rect.top:
+            self.callum.vel.y = 7
+            self.callum.rect.top = collider.rect.bottom
+            self.callum.state = c.FALL
+
+    def adjust_callum_position_for_y_collision_plataforma(self, collider):
+        if collider.rect.y >= self.callum.rect.y:
+            self.callum.vel.y = 0
+            self.callum.rect.bottom = collider.rect.top
+            self.callum.state = c.WALK
+
+    def setup_spritegroups(self):
+        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
+
+# BLIT
+    def blit_tela(self, surface):
+        self.level.blit(self.background, self.camera, self.camera)
+        self.callum_and_enemy_group.draw(self.level)
+        surface.blit(self.level, (0, 0), self.camera)
+
+# UPDATES
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.update_all_sprites(keys)
         self.blit_tela(surface)
+        if self.game_info[c.CALLUM_DEAD]:
+            self.end_game()
 
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
@@ -160,75 +253,14 @@ class Level1(tools._State):
 
     def update_all_sprites(self,keys):
         self.callum.update(keys, self.game_info)
+        self.adjust_sprites_positions()
         self.update_camera()
 
-    def adjust_sprites_positions(self):
-        self.adjust_callum_position()
-
-    def adjust_callum_position(self):
-        self.last_x_position = self.callum.rect.right
-        self.callum.rect.x += round(self.callum.vel.x)
-        self.check_callum_x_collisions()
-        self.callum.rect.y += round(self.callum.vel.y)
-        self.check_callum_y_collisions()
-        if self.callum.rect.x < (self.camera.x + 5):
-            self.callum.rect.x = (self.camera.x + 5)
-
-    def check_callum_x_collisions(self):
-        collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
-        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
-
-        if collider:
-            self.adjust_callum_position_for_x_collision(collider)
-        elif teto:
-            self.adjust_callum_position_for_x_collision(teto)
-
-    def adjust_callum_position_for_x_collision(self, collider):
-        if self.callum.rect.x < collider.rect.x:
-            self.callum.rect.right = collider.rect.left
-        else:
-            self.callum.rect.left = collider.rect.right
-            self.callum.x_vel = 0
-
-    def check_callum_y_collisions(self):
-        ground = pg.sprite.spritecollideany(self.callum, self.group_ground)
-        plataforma = pg.sprite.spritecollideany(self.callum, self.group_plataforma)
-        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
-        #agua = pg.sprite.spritecollideany(self.callum, self.group_agua)
-        #espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
-
-        if ground:
-            self.adjust_callum_position_for_y_collision_ground_teto(ground)
-        elif plataforma:
-            self.adjust_callum_position_for_y_collision_plataforma(plataforma)
-
-    def adjust_callum_position_for_y_collision_ground_teto(self, collider):
-        if collider.rect.bottom > self.callum.rect.bottom:
-            self.callum.vel.y = 0
-            self.callum.rect.bottom = collider.rect.top
-            self.callum.state = c.WALK
-        elif collider.rect.top < self.callum.rect.top:
-            self.callum.vel.y = 7
-            self.callum.rect.top = collider.rect.bottom
-            self.callum.state = c.FALL
-
-    def adjust_callum_position_for_y_collision_plataforma(self, collider):
-        if collider.rect.top >= self.callum.rect.bottom:
-            self.callum.vel.y = 0
-            self.callum.rect.bottom = collider.rect.top
-            self.callum.state = c.WALK
-
-    def setup_spritegroups(self):
-        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
-
-    def blit_tela(self, surface):
-        self.level.blit(self.background, self.camera, self.camera)
-        self.callum_and_enemy_group.draw(self.level)
-        surface.blit(self.level, (0, 0), self.camera)
-
-
-
-
+    def end_game(self):
+        if self.game_info[c.CALLUM_DEAD]:
+            self.callum.vel.x = 0
+            self.next = c.GAME_OVER
+            self.done = True
 
 
 
