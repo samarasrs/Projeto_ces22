@@ -69,6 +69,7 @@ class Game_Over(tools._State):
 
     #prepara o fundo de cada tela do Menu e o Titulo
     def setup_background(self):
+        self.background = setup.GFX['Menu']
         self.imagem = pg.Surface((c.TELA_LARGURA, c.TELA_ALTURA))
         self.imagem.set_alpha(130)
         self.imagem.fill(c.GRAY)
@@ -106,7 +107,7 @@ class Game_Over(tools._State):
                 self.botao_perm = self.botao = pg.transform.scale(setup.GFX['circulo_azul'], c.BOTAO_PERM_TAMANHO)
 
                 self.text_sim = self.setup_texto_botao(c.TEXT_SIM, c.FONT_BOTOES_TAMANHO)
-            elif key[pg.K_RIGHT]:
+            elif keys[pg.K_RIGHT]:
                 self.mover_cursor()
                 self.cursor = c.BOTAO_NAO
                 self.botao_sim = self.setup_botao()
@@ -132,12 +133,15 @@ class Game_Over(tools._State):
 
     # Apresenta as imagens e textos da tela Ajuda
     def blit_tela(self, surface):
+        surface.blit(self.background, c.POS_BACKGROUND)
         surface.blit(self.imagem, [0, 0])
         surface.blit(self.botao_sim, c.POS_BOTAO_SIM)
         surface.blit(self.botao_nao, c.POS_BOTAO_NAO)
-        surface.blit(self.botao_perm2, c.POS_TEXT_BOTAO_PERM2)
+        surface.blit(self.botao_perm2, c.POS_BOTAO_PERM2)
         surface.blit(self.text_game_over, c.POS_TEXT_GAME_OVER)
         surface.blit(self.text_deseja, c.POS_TEXT_DESEJA)
+        surface.blit(self.text_sim, c.POS_TEXT_SIM)
+        surface.blit(self.text_nao, c.POS_TEXT_NAO)
 
     # Controla a tela Menu
     def tela(self, surface, keys):

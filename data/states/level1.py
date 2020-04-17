@@ -23,12 +23,11 @@ class Level1(tools._State):
         self.setup_pedras()
         self.setup_callum()
         self.setup_spritegroups()
-        self.end_game()
 
 # SETUPS
     def setup_callum(self):
         self.callum = callum2.Callum()
-        self.callum.rect.x = self.camera.x + 90
+        self.callum.rect.x = self.camera.x + 30
         self.callum.rect.bottom = 493
 
     def setup_background(self):
@@ -115,8 +114,8 @@ class Level1(tools._State):
         self.group_gaiola = pg.sprite.Group(gaiola_rect1)
 
     def setup_espinhos(self):
-        espinho_rect1 = obstaculo.Obstaculo(350, 387, 141, 213)
-        espinho_rect2 = obstaculo.Obstaculo(775, 532, 139, 68)
+        espinho_rect1 = obstaculo.Obstaculo(350, 421, 144, 179)
+        espinho_rect2 = obstaculo.Obstaculo(771, 565, 140, 35)
         espinho_rect3 = obstaculo.Obstaculo(1123, 317, 73, 28)
         espinho_rect4 = obstaculo.Obstaculo(1334, 283, 76, 26)
 
@@ -169,16 +168,27 @@ class Level1(tools._State):
             self.adjust_callum_position_for_y_collision_plataforma(plataforma)
         elif teto:
             self.adjust_callum_position_for_y_collision_teto(teto)
-        elif agua or espinho:
-            self.game_info[c.CALLUM_DEAD] = True
+        elif agua:
+            if agua.rect.bottom > self.callum.rect.bottom:
+                self.callum.vel.y = 0
+                self.callum.rect.bottom = agua.rect.top
+                self.callum.state = c.DEAD
+        elif espinho:
+            if espinho.rect.bottom > self.callum.rect.bottom:
+                self.callum.vel.y = 0
+                self.callum.rect.bottom = espinho.rect.top
+                self.callum.state = c.DEAD
         if ground == None and plataforma == None:
-            if self.callum.state != c.JUMP and self.callum.state != c.DEAD:
+            if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
 
     def check_callum_dead(self):
         if self.callum.rect.y > c.TELA_ALTURA:
             self.game_info[c.CALLUM_DEAD] = True
             self.callum.state = c.DEAD
+
+
+
 
 # AJUSTES
 
@@ -237,8 +247,6 @@ class Level1(tools._State):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.update_all_sprites(keys)
         self.blit_tela(surface)
-        if self.game_info[c.CALLUM_DEAD]:
-            self.end_game()
 
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
@@ -251,16 +259,18 @@ class Level1(tools._State):
             highest = self.level_rect.w - self.camera.w
             self.camera.x = min(highest, new)
 
-    def update_all_sprites(self,keys):
+    def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
         self.adjust_sprites_positions()
+        self.check_callum_dead()
         self.update_camera()
+        self.end_game()
 
     def end_game(self):
-        if self.game_info[c.CALLUM_DEAD]:
-            self.callum.vel.x = 0
+         if self.callum.dead:
             self.next = c.GAME_OVER
             self.done = True
+
 
 
 

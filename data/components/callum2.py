@@ -14,6 +14,7 @@ class Callum(pg.sprite.Sprite):
         self.jumping_timer = 0
         self.current_frame = 0
         self.allow_jump = True
+        self.dead = False
         self.setup_force()
         self.load_images()
 
@@ -70,10 +71,10 @@ class Callum(pg.sprite.Sprite):
             self.jump_frame_l.append(pg.transform.flip(frame, True, False))
 
 
-        self.dying_frames_r = [self.get_image(241, 167, 23, 17)]
+        self.dying_frames_r = [self.get_image(166, 244, 21, 13)]
         for frame in self.dying_frames_r:
             frame.set_colorkey(c.BLACK)
-        self.dying_frames_l = [pg.transform.flip(self.get_image(241, 167, 23, 17), True, False)]
+        self.dying_frames_l = [pg.transform.flip(self.get_image(166, 244, 21, 13), True, False)]
 
 # ESTADOS
 
@@ -202,11 +203,14 @@ class Callum(pg.sprite.Sprite):
             if self.vel.x < self.max_x_vel:
                 self.vel.x += self.x_accel
 
-    def dead(self):
+    def die(self):
         if self.vel.x >= 0:
             self.image = self.dying_frames_r[0]
         else:
             self.image = self.dying_frames_l[0]
+        self.vel.x = 0
+        self.dead = True
+
 
     def calculate_animation_speed(self):
         if self.vel.x== 0:
@@ -216,6 +220,7 @@ class Callum(pg.sprite.Sprite):
         else:
             animation_speed = 90 - (self.vel.x * (9) * -1)
         return animation_speed
+
 
     def handle_states(self,keys):
         if self.state == c.STAND:
@@ -227,13 +232,12 @@ class Callum(pg.sprite.Sprite):
         elif self.state == c.FALL:
             self.falling(keys)
         elif self.state == c.DEAD:
-            self.dead()
+            self.die()
+
 
 # UPDATE
 
     def update(self, keys, game_info):
         self.current_time = game_info[c.CURRENT_TIME]
-        if game_info[c.CALLUM_DEAD]:
-            self.state = c.DEAD
         self.handle_states(keys)
 
