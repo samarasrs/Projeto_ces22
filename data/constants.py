@@ -25,13 +25,34 @@ NEAR_BLACK    = ( 19,  15,  48)
 COMBLUE      = (233, 232, 255)
 GOLD         = (255, 215,   0)
 
+# Callum
+SIZE_MULTIPLIER = 3
+
+
+#estados Callum
+STAND = 'standing'
+WALK = 'walk'
+JUMP = 'jump'
+FALL = 'fall'
+DEAD = 'dead'
+
+
+
 
 # Fisica
 # Player properties
-PLAYER_ACC = 0.8
-PLAYER_FRICTION = -0.12
-PLAYER_GRAV = 0.8
-PLAYER_JUMP = 20
+WALK_ACCEL = .15
+RUN_ACCEL = 20
+SMALL_TURNAROUND = .35
+
+GRAVITY = 1.01
+JUMP_GRAVITY = .31
+JUMP_VEL = -10
+FAST_JUMP_VEL = -12.5
+MAX_Y_VEL = 11
+
+MAX_RUN_SPEED = 800
+MAX_WALK_SPEED = 6
 
 
 # MENU

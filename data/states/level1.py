@@ -1,7 +1,7 @@
 import pygame as pg
 from .. import setup, tools
 from .. import constants as c
-from ..components import obstaculo
+from ..components import obstaculo, callum2
 
 
 class Level1(tools._State):
@@ -19,6 +19,12 @@ class Level1(tools._State):
         self.setup_espinhos()
         self.setup_plataformas()
         self.setup_pedras()
+        self.setup_callum()
+
+    def setup_callum(self):
+        self.callum = callum2.Callum()
+        self.callum.rect.x = self.camera.x + 90
+        self.callum.rect.bottom = 493
 
     def setup_background(self):
         self.background = setup.GFX['Map_jogo_teste']
@@ -138,12 +144,86 @@ class Level1(tools._State):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.blit_tela(surface)
 
-    #def update_camera(self):
+    def update_camera(self):
+        third = self.camera.x + self.camera.w // 3
+        callum_center = self.callum.rect.centerx
+        callum_right = self.callum.rect.right
 
+        if self.callum.x_vel > 0 and callum_center >= third:
+            mult = 0.5 if callum_right < self.camera.centerx else 1
+            new = self.camera.x + mult * self.callum.x_vel
+            highest = self.level_rect.w - self.camera.w
+            self.camera.x = min(highest, new)
+
+    def update_all_sprites(self,keys):
+        self.callum.update(keys, self.game_info)
+        self.update_camera()
+
+    def adjust_sprites_positions(self):
+        self.adjust_callum_position()
+
+
+    def adjust_callum_position(self):
+        self.last_x_position = self.callum.rect.right
+        self.callum.rect.x += round(self.callum.vel.x)
+        self.check_callum_x_collisions()
+        self.callum.rect.y += round(self.callum.vel.y)
+        self.check_callum_y_collisions()
+        if self.callum.rect.x < (self.camera.x + 5):
+            self.callum.rect.x = (self.camera.x + 5)
+
+    def check_callum_x_collisions(self):
+        collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
+        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
+
+        if collider:
+            self.adjust_callum_position_for_x_collision(collider)
+        elif teto:
+            self.adjust_callum_position_for_x_collision(teto)
+
+    def adjust_callum_position_for_x_collision(self, collider):
+        if self.callum.rect.x < collider.rect.x:
+            self.callum.rect.right = collider.rect.left
+        else:
+            self.callum.rect.left = collider.rect.right
+            self.callum.x_vel = 0
+
+    def check_callum_y_collisions(self):
+        ground = pg.sprite.spritecollideany(self.callum, self.group_ground)
+        plataforma = pg.sprite.spritecollideany(self.callum, self.group_plataforma)
+        teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
+        #agua = pg.sprite.spritecollideany(self.callum, self.group_agua)
+        #espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
+
+        if ground:
+            self.adjust_callum_position_for_y_collision_ground_teto(ground)
+        elif plataforma:
+            self.adjust_callum_position_for_y_collision_plataforma(plataforma)
+
+    def adjust_callum_position_for_y_collision_ground_teto(self, collider):
+        if collider.rect.bottom > self.callum.rect.bottom:
+            self.callum.vel.y = 0
+            self.callum.rect.bottom = collider.rect.top
+            self.callum.state = c.WALK
+        elif collider.rect.top < self.callum.rect.top:
+            self.callum.vel.y = 7
+            self.callum.rect.top = collider.rect.bottom
+            self.callum.state = c.FALL
+
+    def adjust_callum_position_for_y_collision_plataforma(self, collider):
+        if collider.rect.top >= self.callum.rect.bottom:
+            self.callum.vel.y = 0
+            self.callum.rect.bottom = collider.rect.top
+            self.callum.state = c.WALK
+
+    def setup_spritegroups(self):
+        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
 
     def blit_tela(self, surface):
-        surface.blit(self.level, (0, 0), self.camera)
         self.level.blit(self.background, self.camera, self.camera)
+        self.callum_and_enemy_group.draw(self.level)
+        surface.blit(self.level, (0, 0), self.camera)
+
 
 
 
