@@ -149,7 +149,6 @@ class Game_Over(tools._State):
     def tela(self, surface, keys):
         input_list = [pg.K_RETURN]
         self.update_cursor_tela_game_over(keys)
-        print(self.cursor)
         self.blit_tela(surface)
          # se o cursor estiver em uma posição diferente do botao auxiliar (redondo) e for
         # pressionada a tecla enter troca de tela

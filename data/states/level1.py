@@ -8,7 +8,9 @@ class Level1(tools._State):
     def __init__(self):
         tools._State.__init__(self)
 
+
     def startup(self, current_time, persist):
+        print(persist)
         self.game_info = persist
         self.game_info[c.CURRENT_TIME] = current_time
         self.game_info[c.CALLUM_DEAD] = False
@@ -38,7 +40,8 @@ class Level1(tools._State):
         self.level = pg.Surface((largura, altura)).convert()
         self.level_rect = self.level.get_rect()
         self.camera = setup.TELA.get_rect(bottom=self.level_rect.bottom)
-        self.camera.x = self.game_info[c.CAMERA_INICIAL_X]
+        self.camera.x = 0
+        print(self.game_info)
 
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
@@ -175,12 +178,12 @@ class Level1(tools._State):
             if agua.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = agua.rect.top
-                self.callum.state = c.DEAD
+                self.callum.star_death(self.game_info)
         elif espinho:
             if espinho.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = espinho.rect.top
-                self.callum.state = c.DEAD
+                self.callum.star_death(self.game_info)
         if ground == None and plataforma == None:
             if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
@@ -189,6 +192,8 @@ class Level1(tools._State):
         if self.callum.rect.y > c.TELA_ALTURA:
             self.game_info[c.CALLUM_DEAD] = True
             self.callum.state = c.DEAD
+        if self.game_info[c.CALLUM_DEAD]:
+            self.end_game()
 
 
 
@@ -251,6 +256,7 @@ class Level1(tools._State):
         self.update_all_sprites(keys)
         self.blit_tela(surface)
 
+
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
@@ -266,19 +272,18 @@ class Level1(tools._State):
             mult = 1
             new = self.camera.x + mult * self.callum.vel.x
             self.camera.x = new
-            print("teste")
+            #print("teste")
 
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
-        self.end_game()
 
     def end_game(self):
-         if self.callum.dead:
-            self.next = c.GAME_OVER
-            self.done = True
+        self.next = c.GAME_OVER
+        self.done = True
+
 
 
 

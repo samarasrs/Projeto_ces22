@@ -35,9 +35,6 @@ WALK = 'walk'
 JUMP = 'jump'
 FALL = 'fall'
 DEAD = 'dead'
-GAME_O = 'game over'
-
-
 
 
 # Fisica

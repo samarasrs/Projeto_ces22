@@ -209,7 +209,12 @@ class Callum(pg.sprite.Sprite):
         else:
             self.image = self.dying_frames_l[0]
         self.vel.x = 0
+
+
+    def star_death(self, game_info):
         self.dead = True
+        game_info[c.CALLUM_DEAD] = True
+        self.die()
 
 
     def calculate_animation_speed(self):
