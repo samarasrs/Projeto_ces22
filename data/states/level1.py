@@ -1,7 +1,7 @@
 import pygame as pg
 from .. import setup, tools
 from .. import constants as c
-from ..components import obstaculo, callum2
+from ..components import obstaculo, callum2, witch
 
 
 class Level1(tools._State):
@@ -17,16 +17,23 @@ class Level1(tools._State):
         self.setup_background()
         self.setup_ground()
         self.setup_teto()
-        self. setup_agua()
+        self.setup_agua()
         self.setup_gaiola()
         self.setup_espinhos()
         self.setup_espinhos()
         self.setup_plataformas()
         self.setup_pedras()
         self.setup_callum()
+        self.setup_witch()
         self.setup_spritegroups()
 
 # SETUPS
+    def setup_witch(self):
+        self.witch1 = witch.Witch()
+        self.witch1.rect.midbottom = (742, 283)
+
+
+
     def setup_callum(self):
         self.callum = callum2.Callum()
         self.callum.rect.x = self.camera.x + 30
@@ -150,6 +157,14 @@ class Level1(tools._State):
                                            pedra_rect5, pedra_rect6, pedra_rect7, pedra_rect8)
 
 # CHECKS
+    def check_witch1_limits(self):
+        if self.witch1.rect.left <= 590:
+            self.witch1.vel.x = self.witch1.vel.x * (-1)
+        if self.witch1.rect.right >= 790:
+            self.witch1.vel.x = self.witch1.vel.x * (-1)
+
+        self.adjust_witch1_position()
+
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -202,6 +217,13 @@ class Level1(tools._State):
 
     def adjust_sprites_positions(self):
         self.adjust_callum_position()
+        self.check_witch1_limits()
+
+    def adjust_witch1_position(self):
+        self.last_x_position = self.witch1.rect.right
+        self.witch1.rect.x += round(self.witch1.vel.x)
+        self.witch1.rect.y += round(self.witch1.vel.y)
+
 
     def adjust_callum_position(self):
         self.last_x_position = self.callum.rect.right
@@ -243,6 +265,7 @@ class Level1(tools._State):
 
     def setup_spritegroups(self):
         self.callum_and_enemy_group = pg.sprite.Group(self.callum)
+        self.callum_and_enemy_group.add(self.witch1)
 
 # BLIT
     def blit_tela(self, surface):
@@ -262,6 +285,8 @@ class Level1(tools._State):
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
 
+        print(self.callum.rect.midbottom)
+
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
             new = self.camera.x + mult * self.callum.vel.x
@@ -274,8 +299,10 @@ class Level1(tools._State):
             self.camera.x = new
             #print("teste")
 
+
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
+        self.witch1.update(self.game_info)
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
