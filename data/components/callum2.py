@@ -18,6 +18,8 @@ class Callum(pg.sprite.Sprite):
         self.setup_force()
         self.load_images()
 
+        self.number_of_lifes = 3
+
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)

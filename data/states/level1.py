@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 from .. import setup, tools
 from .. import constants as c
 from ..components import obstaculo, callum2, witch
@@ -31,6 +32,8 @@ class Level1(tools._State):
     def setup_witch(self):
         self.witch1 = witch.Witch()
         self.witch1.rect.midbottom = (742, 283)
+        self.witch2 = witch.Witch()
+        self.witch2.rect.midbottom = (334, 388)
 
 
 
@@ -165,6 +168,14 @@ class Level1(tools._State):
 
         self.adjust_witch1_position()
 
+    def check_witch2_limits(self):
+        if self.witch2.rect.left <= 150:
+            self.witch2.vel.x = self.witch2.vel.x * (-1)
+        if self.witch2.rect.right >= 380:
+            self.witch2.vel.x = self.witch2.vel.x * (-1)
+
+        self.adjust_witch2_position()
+
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -193,22 +204,49 @@ class Level1(tools._State):
             if agua.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = agua.rect.top
-                self.callum.star_death(self.game_info)
+                #self.callum.star_death(self.game_info)
+                self.callum.number_of_lifes -= 1
         elif espinho:
             if espinho.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = espinho.rect.top
-                self.callum.star_death(self.game_info)
+                #self.callum.star_death(self.game_info)
+                self.callum_damage_sound()
+                self.callum.number_of_lifes -= 1
         if ground == None and plataforma == None:
             if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
 
     def check_callum_dead(self):
+
+        if self.callum.number_of_lifes == 0:
+            self.game_info[c.CALLUM_DEAD] = True
         if self.callum.rect.y > c.TELA_ALTURA:
             self.game_info[c.CALLUM_DEAD] = True
             self.callum.state = c.DEAD
         if self.game_info[c.CALLUM_DEAD]:
+            self.callum.star_death(self.game_info)
             self.end_game()
+
+    def check_witch_damage(self):
+        hits = pg.sprite.spritecollide(self.callum, self.witch_group, False)
+
+        for hit in hits:
+            if hit:
+                self.callum.number_of_lifes -= 1
+                if self.callum.vel.x >= 0:
+                    self.callum.rect.right -= 25
+                    self.callum.vel.x = - 5
+                    hit.kill()
+                else:
+                    self.callum.rect.left += 25
+                    self.callum.vel.x = + 5
+                self.callum_damage_sound()
+        print(self.callum.vel.x)
+
+    def callum_damage_sound(self):
+        self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
+        self.pain.play()
 
 
 
@@ -217,12 +255,19 @@ class Level1(tools._State):
 
     def adjust_sprites_positions(self):
         self.adjust_callum_position()
+        self.check_witch_damage()
         self.check_witch1_limits()
+        self.check_witch2_limits()
 
     def adjust_witch1_position(self):
         self.last_x_position = self.witch1.rect.right
         self.witch1.rect.x += round(self.witch1.vel.x)
         self.witch1.rect.y += round(self.witch1.vel.y)
+
+    def adjust_witch2_position(self):
+        self.last_x_position = self.witch2.rect.right
+        self.witch2.rect.x += round(self.witch2.vel.x)
+        self.witch2.rect.y += round(self.witch2.vel.y)
 
 
     def adjust_callum_position(self):
@@ -265,13 +310,57 @@ class Level1(tools._State):
 
     def setup_spritegroups(self):
         self.callum_and_enemy_group = pg.sprite.Group(self.callum)
+        self.witch_group = pg.sprite.Group()
+        self.witch_group.add(self.witch1)
+        self.witch_group.add(self.witch2)
+
         self.callum_and_enemy_group.add(self.witch1)
+        self.callum_and_enemy_group.add(self.witch2)
 
 # BLIT
     def blit_tela(self, surface):
         self.level.blit(self.background, self.camera, self.camera)
         self.callum_and_enemy_group.draw(self.level)
         surface.blit(self.level, (0, 0), self.camera)
+        self.show_heart()
+
+    def get_heart_image(self, x, y, width, height):
+        self.spritesheet_heart = setup.GFX['heart']
+        image = pg.Surface((width, height))
+        rect = image.get_rect()
+
+        image.blit(self.spritesheet_heart, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image,
+                                   (int(rect.width * c.SIZE_MULTIPLIER),
+                                    int(rect.height * c.SIZE_MULTIPLIER)))
+        return image
+
+    def show_heart(self):
+
+
+        self.heart_image = self.get_heart_image(0, 0, 16, 16)
+        self.heart_image.set_colorkey(c.BLACK)
+        self.heart_rect = self.heart_image.get_rect()
+        self.heart_rect.x = 0
+        self.heart_rect.y = 0
+        setup.TELA.blit(self.heart_image, self.heart_rect)
+
+        if self.callum.number_of_lifes > 1:
+            print("heart")
+            self.heart_image2 = self.get_heart_image(0, 0, 16, 16)
+            self.heart_image2.set_colorkey(c.BLACK)
+            self.heart_rect2 = self.heart_image2.get_rect()
+            self.heart_rect2.x = 49
+            self.heart_rect2.y = 0
+            setup.TELA.blit(self.heart_image2, self.heart_rect2)
+        if self.callum.number_of_lifes > 2:
+            self.heart_image3 = self.get_heart_image(0, 0, 16, 16)
+            self.heart_image3.set_colorkey(c.BLACK)
+            self.heart_rect3 = self.heart_image3.get_rect()
+            self.heart_rect3.x = 98
+            self.heart_rect3.y = 0
+            setup.TELA.blit(self.heart_image3, self.heart_rect3)
+
 
 # UPDATES
     def update(self, surface, keys, current_time):
@@ -303,6 +392,7 @@ class Level1(tools._State):
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
         self.witch1.update(self.game_info)
+        self.witch2.update(self.game_info)
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
