@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.math import Vector2
 from .. import setup, tools
 from .. import constants as c
+from . import powercallum
 vec = pg.math.Vector2
 
 class Callum(pg.sprite.Sprite):
@@ -17,12 +18,21 @@ class Callum(pg.sprite.Sprite):
         self.dead = False
         self.setup_force()
         self.load_images()
+        self.looking = c.RIGHT
 
         self.number_of_lifes = 3
 
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
+
+        #poder
+        self.allow_power1 = False
+        self.allow_power2 = False
+        self.last_power1_time = 0
+        self.imagepower1 = None
+        self.setup_counters()
+
 
 #SETUP
 
@@ -33,6 +43,11 @@ class Callum(pg.sprite.Sprite):
         self.x_accel = c.WALK_ACCEL
         self.jump_vel = c.JUMP_VEL
         self.gravity = c.GRAVITY
+
+    def setup_counters(self):
+        self.power1_count = 0
+        self.power2_count = 0
+
 
 # IMAGEM
 
@@ -84,7 +99,8 @@ class Callum(pg.sprite.Sprite):
         if not keys[tools.keybinding['jump']]:
             self.allow_jump = True
 
-    def jumping(self, keys):
+    def jumping(self, keys,power1_group):
+        self.check_allow_power1(keys)
         self.allow_jump = False
         self.gravity = c.JUMP_GRAVITY
         self.vel.y += self.gravity
@@ -111,14 +127,20 @@ class Callum(pg.sprite.Sprite):
         elif keys[tools.keybinding['right']]:
             if self.vel.x < self.max_x_vel:
                 self.vel.x += self.x_accel
+        
+        elif keys[tools.keybinding['action1']]:
+            if self.allow_power1:
+                self.shoot_power1(power1_group)
 
         if not keys[tools.keybinding['jump']]:
             self.gravity = c.GRAVITY
             self.state = c.FALL
             self.state_ant = c.JUMP
 
-    def walking(self, keys):
+    def walking(self, keys,power1_group):
+        self.check_allow_power1(keys)
         self.check_to_allow_jump(keys)
+
         if self.state_ant == c.STAND:
             self.state_ant = c.WALK
             self.walking_timer = self.current_time
@@ -155,6 +177,11 @@ class Callum(pg.sprite.Sprite):
                     self.vel.x= 0.5
             elif abs(self.vel.x) > self.max_x_vel:
                 self.vel.x -= self.x_accel
+        
+        elif keys[tools.keybinding['action1']]:
+            if self.allow_power1:
+                self.shoot_power1(power1_group)
+
 
         else:
             if self.vel.x > 0:
@@ -176,8 +203,9 @@ class Callum(pg.sprite.Sprite):
                 self.state = c.STAND
                 self.state_ant = c.WALK
 
-    def standing(self, keys):
+    def standing(self, keys,power1_group):
         self.check_to_allow_jump(keys)
+        self.check_allow_power1(keys)
         self.image = self.standing_frames[0]
         self.vel = vec(0, 0)
 
@@ -193,7 +221,8 @@ class Callum(pg.sprite.Sprite):
         else:
             self.state = c.STAND
 
-    def falling(self, keys):
+    def falling(self, keys,power1_group):
+        self.check_allow_power1(keys)
         if self.vel.y < c.MAX_Y_VEL:
             self.vel.y += self.gravity
 
@@ -204,6 +233,10 @@ class Callum(pg.sprite.Sprite):
         elif keys[tools.keybinding['right']]:
             if self.vel.x < self.max_x_vel:
                 self.vel.x += self.x_accel
+        
+        elif keys[tools.keybinding['action1']]:
+            if self.allow_power1:
+                self.shoot_power1(power1_group)
 
     def die(self):
         if self.vel.x >= 0:
@@ -212,12 +245,10 @@ class Callum(pg.sprite.Sprite):
             self.image = self.dying_frames_l[0]
         self.vel.x = 0
 
-
     def star_death(self, game_info):
         self.dead = True
         game_info[c.CALLUM_DEAD] = True
         self.die()
-
 
     def calculate_animation_speed(self):
         if self.vel.x== 0:
@@ -228,23 +259,59 @@ class Callum(pg.sprite.Sprite):
             animation_speed = 90 - (self.vel.x * (9) * -1)
         return animation_speed
 
-
-    def handle_states(self,keys):
+    def handle_states(self,keys,power1_group):
         if self.state == c.STAND:
-            self.standing(keys)
+            self.standing(keys,power1_group)
         elif self.state == c.WALK:
-            self.walking(keys)
+            self.walking(keys,power1_group)
         elif self.state == c.JUMP:
-            self.jumping(keys)
+            self.jumping(keys,power1_group)
         elif self.state == c.FALL:
-            self.falling(keys)
+            self.falling(keys,power1_group)
         elif self.state == c.DEAD:
             self.die()
 
+#CHECKS
+
+    def check_allow_power1(self,keys):
+        if not keys[tools.keybinding['action1']]:
+            self.allow_power1 = True
+
+#SHOOTS
+
+    def shoot_power1(self,power1_group):
+        #colocar aki o som
+        #self.power1_count = self.count_number_power1(power1_group)
+
+        if(self.current_time - self.last_power1_time) > 200:
+            if self.power1_count <2:
+                self.allow_power1 = False
+                power1_group.add(powercallum.Power1(self.rect.x,self.rect.y,self.looking))
+                self.last_power1_time = self.current_time
+
+                #adicionando a frame que o callum atira o poder
+                #self.frame_index = 6 #ainda a definir
+
+
+        
+        print("shoot")
+        '''self.shoot = powercallum.Power1(self.rect.x,self.rect.y,self.looking,c.POWER1)
+        if self.power1_count < 5:
+            print("entrou no if")
+            self.power1_count += 1
+            self.shoot.frame_index = self.power1_count
+            self.imagepower1 = self.shoot.frames[self.shoot.frame_index]
+        else:
+            ("entrou no else")
+            self.power1_count = 0
+            self.shoot.kill()
+            self.imagepower1 = None'''
 
 # UPDATE
 
-    def update(self, keys, game_info):
+    def update(self, keys, game_info,power1_group):
         self.current_time = game_info[c.CURRENT_TIME]
-        self.handle_states(keys)
+        for power in power1_group:
+            power.update(game_info)
+        self.handle_states(keys,power1_group)
 

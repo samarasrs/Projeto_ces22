@@ -28,6 +28,12 @@ GOLD         = (255, 215,   0)
 # Callum
 SIZE_MULTIPLIER = 3
 
+# POWER
+
+POWER1 = 'power1'
+FLYING = 'voando'
+EXPLODING = 'explodindo'
+
 
 #estados Callum
 STAND = 'standing'
@@ -35,6 +41,8 @@ WALK = 'walk'
 JUMP = 'jump'
 FALL = 'fall'
 DEAD = 'dead'
+RIGHT = 'right'
+LEFT = 'left'
 
 
 # Fisica

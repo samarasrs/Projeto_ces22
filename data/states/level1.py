@@ -11,7 +11,7 @@ class Level1(tools._State):
 
 
     def startup(self, current_time, persist):
-        print(persist)
+        #print(persist)
         self.game_info = persist
         self.game_info[c.CURRENT_TIME] = current_time
         self.game_info[c.CALLUM_DEAD] = False
@@ -49,7 +49,7 @@ class Level1(tools._State):
         self.level_rect = self.level.get_rect()
         self.camera = setup.TELA.get_rect(bottom=self.level_rect.bottom)
         self.camera.x = 0
-        print(self.game_info)
+        #print(self.game_info)
 
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
@@ -157,6 +157,20 @@ class Level1(tools._State):
         self.group_pedra = pg.sprite.Group(pedra_rect1, pedra_rect2, pedra_rect3, pedra_rect4,
                                            pedra_rect5, pedra_rect6, pedra_rect7, pedra_rect8)
 
+    def setup_spritegroups(self):
+        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
+        self.witch_group = pg.sprite.Group()
+        self.power1_group = pg.sprite.Group()
+        
+        self.witch_group.add(self.witch1)
+        self.witch_group.add(self.witch2)
+
+        self.callum_and_enemy_group.add(self.witch1)
+        self.callum_and_enemy_group.add(self.witch2)
+        if self.callum.imagepower1:
+            print('adicionou no grupo')
+            self.callum_and_enemy_group.add(self.callum.imagepower1)
+
 # CHECKS
     def check_witch1_limits(self):
         if self.witch1.rect.left <= 590:
@@ -240,17 +254,20 @@ class Level1(tools._State):
                     self.callum.rect.left += 25
                     self.callum.vel.x = + 5
                 self.callum_damage_sound()
-        print(self.callum.vel.x)
+        #print(self.callum.vel.x)
 
     def callum_damage_sound(self):
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
         self.pain.play()
 
+    
 
 # AJUSTES
 
     def adjust_sprites_positions(self):
         self.adjust_callum_position()
+        for power in self.power1_group:
+            self.adjust_power1_position(power)
         self.check_witch_damage()
         self.check_witch1_limits()
         self.check_witch2_limits()
@@ -303,22 +320,20 @@ class Level1(tools._State):
             self.callum.rect.bottom = collider.rect.top
             self.callum.state = c.WALK
 
-    def setup_spritegroups(self):
-        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
-        self.witch_group = pg.sprite.Group()
-        self.witch_group.add(self.witch1)
-        self.witch_group.add(self.witch2)
+    def adjust_power1_position(self,power1):
+        if power1.state == c.FLYING:
+            power1.rect.centery = self.callum.rect.centery+15
+            power1.rect.x = self.callum.rect.right-6
 
-        self.callum_and_enemy_group.add(self.witch1)
-        self.callum_and_enemy_group.add(self.witch2)
 
 # BLIT
     def blit_tela(self, surface):
         self.level.blit(self.background, self.camera, self.camera)
         self.callum_and_enemy_group.draw(self.level)
+        self.power1_group.draw(self.level)
         surface.blit(self.level, (0, 0), self.camera)
         self.show_heart()
-
+                
     def get_heart_image(self, x, y, width, height):
         self.spritesheet_heart = setup.GFX['heart']
         image = pg.Surface((width, height))
@@ -339,7 +354,7 @@ class Level1(tools._State):
         setup.TELA.blit(self.heart_image, self.heart_rect)
 
         if self.callum.number_of_lifes > 1:
-            print("heart")
+            #print("heart")
             self.heart_image2 = self.get_heart_image(0, 0, 16, 16)
             self.heart_image2.set_colorkey(c.BLACK)
             self.heart_rect2 = self.heart_image2.get_rect()
@@ -366,7 +381,7 @@ class Level1(tools._State):
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
 
-        print(self.callum.rect.midbottom)
+        #print(self.callum.rect.midbottom)
 
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
@@ -381,7 +396,7 @@ class Level1(tools._State):
             #print("teste")
 
     def update_all_sprites(self, keys):
-        self.callum.update(keys, self.game_info)
+        self.callum.update(keys, self.game_info,self.power1_group)
         self.witch1.update(self.game_info)
         self.witch2.update(self.game_info)
         self.adjust_sprites_positions()
