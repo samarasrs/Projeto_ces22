@@ -35,8 +35,6 @@ class Level1(tools._State):
         self.witch2 = witch.Witch()
         self.witch2.rect.midbottom = (334, 388)
 
-
-
     def setup_callum(self):
         self.callum = callum2.Callum()
         self.callum.rect.x = self.camera.x + 30
@@ -249,8 +247,6 @@ class Level1(tools._State):
         self.pain.play()
 
 
-
-
 # AJUSTES
 
     def adjust_sprites_positions(self):
@@ -268,7 +264,6 @@ class Level1(tools._State):
         self.last_x_position = self.witch2.rect.right
         self.witch2.rect.x += round(self.witch2.vel.x)
         self.witch2.rect.y += round(self.witch2.vel.y)
-
 
     def adjust_callum_position(self):
         self.last_x_position = self.callum.rect.right
@@ -336,8 +331,6 @@ class Level1(tools._State):
         return image
 
     def show_heart(self):
-
-
         self.heart_image = self.get_heart_image(0, 0, 16, 16)
         self.heart_image.set_colorkey(c.BLACK)
         self.heart_rect = self.heart_image.get_rect()
@@ -368,7 +361,6 @@ class Level1(tools._State):
         self.update_all_sprites(keys)
         self.blit_tela(surface)
 
-
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
@@ -387,7 +379,6 @@ class Level1(tools._State):
             new = self.camera.x + mult * self.callum.vel.x
             self.camera.x = new
             #print("teste")
-
 
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
