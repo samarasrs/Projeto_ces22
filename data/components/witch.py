@@ -8,15 +8,19 @@ class Witch(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['witch']
+        self.sprite_sheet_death = setup.GFX['witch']
         self.state = c.STAND
         self.state_ant = c.STAND
         self.walking_timer = 0
         self.jumping_timer = 0
         self.current_frame = 0
+        self.die_timer = 0
         self.allow_jump = True
         self.dead = False
         self.setup_force()
         self.load_images()
+
+
 
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
@@ -65,49 +69,21 @@ class Witch(pg.sprite.Sprite):
 
 
 
-        """self.dying_frames_r = [self.get_image(166, 244, 21, 13)]
+        self.dying_frames_r = [self.get_image(166, 244, 21, 13)]
         for frame in self.dying_frames_r:
             frame.set_colorkey(c.BLACK)
-        self.dying_frames_l = [pg.transform.flip(self.get_image(166, 244, 21, 13), True, False)] """
+
 
 # ESTADOS
 
-    """def check_to_allow_jump(self, keys):
-        if not keys[tools.keybinding['jump']]:
-            self.allow_jump = True """
+    def star_death(self):
+        self.dead = True
+        self.die()
 
-    """def jumping(self, keys):
-        self.allow_jump = False
-        self.gravity = c.JUMP_GRAVITY
-        self.vel.y += self.gravity
-        self.jumping_timer = self.current_time
-        if (self.current_time - self.jumping_timer >
-                    self.calculate_animation_speed()):
-            self.current_frame = (self.current_frame + 1) % len(self.jump_frame_r)
-        if self.vel.x == 0:
-            self.image = self.standing_frames[0]
-        elif self.vel.x > 0:
-            self.image = self.jump_frame_r[self.current_frame]
-        else:
-            self.image = self.jump_frame_l[self.current_frame]
-
-        if 0 <= self.vel.y < self.max_y_vel:
-            self.gravity = c.GRAVITY
-            self.state = c.FALL
-            self.state_ant = c.JUMP
-
-        if keys[tools.keybinding['left']]:
-            if abs(self.vel.x) < self.max_x_vel:
-                self.vel.x -= self.x_accel
-
-        elif keys[tools.keybinding['right']]:
-            if self.vel.x < self.max_x_vel:
-                self.vel.x += self.x_accel
-
-        if not keys[tools.keybinding['jump']]:
-            self.gravity = c.GRAVITY
-            self.state = c.FALL
-            self.state_ant = c.JUMP """
+    def die(self):
+        self.image = self.dying_frames_r[0]
+        self.die_timer += 1
+        self.vel.x = 0
 
     def calculate_animation_speed(self):
         if self.vel.x == 0:

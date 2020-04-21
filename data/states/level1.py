@@ -34,6 +34,8 @@ class Level1(tools._State):
         self.witch1.rect.midbottom = (742, 283)
         self.witch2 = witch.Witch()
         self.witch2.rect.midbottom = (334, 388)
+        self.witch3 = witch.Witch()
+        self.witch3.rect.midbottom = (1525, 143)
 
     def setup_callum(self):
         self.callum = callum2.Callum()
@@ -183,6 +185,14 @@ class Level1(tools._State):
 
         self.adjust_witch2_position()
 
+    def check_witch3_limits(self):
+        if self.witch3.rect.left <= 1200:
+            self.witch3.vel.x = self.witch3.vel.x * (-1)
+        if self.witch3.rect.right >= 1600:
+            self.witch3.vel.x = self.witch3.vel.x * (-1)
+
+        self.adjust_witch3_position()
+
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -269,14 +279,19 @@ class Level1(tools._State):
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
         self.pain.play()
 
-
+    def check_witch_life(self):
+        for witch in self.witch_group:
+            if witch.dead == True:
+                witch.star_death()
 # AJUSTES
 
     def adjust_sprites_positions(self):
         self.adjust_callum_position()
         self.check_witch_damage()
+        self.check_witch_life()
         self.check_witch1_limits()
         self.check_witch2_limits()
+        self.check_witch3_limits()
 
     def adjust_witch1_position(self):
         self.last_x_position = self.witch1.rect.right
@@ -287,6 +302,11 @@ class Level1(tools._State):
         self.last_x_position = self.witch2.rect.right
         self.witch2.rect.x += round(self.witch2.vel.x)
         self.witch2.rect.y += round(self.witch2.vel.y)
+
+    def adjust_witch3_position(self):
+        self.last_x_position = self.witch3.rect.right
+        self.witch3.rect.x += round(self.witch3.vel.x)
+        self.witch3.rect.y += round(self.witch3.vel.y)
 
     def adjust_callum_position(self):
         self.last_x_position = self.callum.rect.right
@@ -332,6 +352,7 @@ class Level1(tools._State):
         self.witch_group = pg.sprite.Group()
         self.witch_group.add(self.witch1)
         self.witch_group.add(self.witch2)
+        self.witch_group.add(self.witch3)
 
         self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
 
@@ -389,7 +410,7 @@ class Level1(tools._State):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
-
+        print(self.callum.rect.midbottom)
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
             new = self.camera.x + mult * self.callum.vel.x
@@ -405,6 +426,7 @@ class Level1(tools._State):
         self.callum.update(keys, self.game_info)
         self.witch1.update(self.game_info)
         self.witch2.update(self.game_info)
+        self.witch3.update(self.game_info)
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
