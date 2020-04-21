@@ -30,12 +30,28 @@ class Level1(tools._State):
 
 # SETUPS
     def setup_witch(self):
-        self.witch1 = witch.Witch()
+        self.witch1 = witch.Witch(True)
         self.witch1.rect.midbottom = (742, 283)
-        self.witch2 = witch.Witch()
+        self.witch2 = witch.Witch(True)
         self.witch2.rect.midbottom = (334, 388)
-        self.witch3 = witch.Witch()
+        self.witch3 = witch.Witch(True)
         self.witch3.rect.midbottom = (1525, 143)
+        self.witch4 = witch.Witch(True)
+        self.witch4.rect.midbottom = (1375, 496)
+        self.witch5 = witch.Witch(True)
+        self.witch5.rect.midbottom = (2596, 528)
+        self.witch6 = witch.Witch(True)
+        self.witch6.rect.midbottom = (4654, 319)
+        self.witch7 = witch.Witch(True)
+        self.witch7.rect.midbottom = (8540, 324)
+        self.morcego1 = witch.Witch(False)
+        self.morcego1.rect.midbottom = (3970, 500)
+        self.morcego2 = witch.Witch(False)
+        self.morcego2.rect.midbottom = (5310, 400)
+        self.morcego3 = witch.Witch(False)
+        self.morcego3.rect.midbottom = (6880, 380)
+        self.morcego4 = witch.Witch(False)
+        self.morcego4.rect.midbottom = (7300, 300)
 
     def setup_callum(self):
         self.callum = callum2.Callum()
@@ -192,7 +208,64 @@ class Level1(tools._State):
             self.witch3.vel.x = self.witch3.vel.x * (-1)
 
         self.adjust_witch3_position()
+    def check_witch4_limits(self):
+        if self.witch4.rect.left <= 1280:
+            self.witch4.vel.x = self.witch4.vel.x * (-1)
+        if self.witch4.rect.right >= 1450:
+            self.witch4.vel.x = self.witch4.vel.x * (-1)
 
+        self.adjust_witch4_position()
+    def check_witch5_limits(self):
+        if self.witch5.rect.left <= 2250:
+            self.witch5.vel.x = self.witch5.vel.x * (-1)
+        if self.witch5.rect.right >= 2695:
+            self.witch5.vel.x = self.witch5.vel.x * (-1)
+
+        self.adjust_witch5_position()
+    def check_witch6_limits(self):
+        if self.witch6.rect.left <= 4440:
+            self.witch6.vel.x = self.witch6.vel.x * (-1)
+        if self.witch6.rect.right >= 4750:
+            self.witch6.vel.x = self.witch6.vel.x * (-1)
+
+        self.adjust_witch6_position()
+    def check_witch7_limits(self):
+        if self.witch7.rect.left <= 8100:
+            self.witch7.vel.x = self.witch7.vel.x * (-1)
+        if self.witch7.rect.right >= 8590:
+            self.witch7.vel.x = self.witch7.vel.x * (-1)
+
+        self.adjust_witch7_position()
+    def check_morcego1_limits(self):
+        if self.morcego1.rect.left <= 3700:
+            self.morcego1.vel.x = self.morcego1.vel.x * (-1)
+        if self.morcego1.rect.right >= 4050:
+            self.morcego1.vel.x = self.morcego1.vel.x * (-1)
+
+        self.adjust_morcego1_position()
+    def check_morcego2_limits(self):
+        if self.morcego2.rect.left <= 5200:
+            self.morcego2.vel.x = self.morcego2.vel.x * (-1)
+        if self.morcego2.rect.right >= 5340:
+            self.morcego2.vel.x = self.morcego2.vel.x * (-1)
+
+        self.adjust_morcego2_position()
+
+    def check_morcego3_limits(self):
+        if self.morcego3.rect.left <= 6800:
+            self.morcego3.vel.x = self.morcego3.vel.x * (-1)
+        if self.morcego1.rect.right >= 6930:
+            self.morcego3.vel.x = self.morcego3.vel.x * (-1)
+
+        self.adjust_morcego3_position()
+
+    def check_morcego4_limits(self):
+        if self.morcego4.rect.left <= 7110:
+            self.morcego4.vel.x = self.morcego4.vel.x * (-1)
+        if self.morcego4.rect.right >= 7350:
+            self.morcego4.vel.x = self.morcego4.vel.x * (-1)
+
+        self.adjust_morcego4_position()
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -269,9 +342,9 @@ class Level1(tools._State):
                 if self.callum.vel.x >= 0:
                     self.callum.rect.right -= 25
                     self.callum.vel.x = - 5
-                    hit.kill()
+                    hit.dead = True
                 else:
-                    self.callum.rect.left += 25
+                    self.callum.rect.left += 40
                     self.callum.vel.x = + 5
                 self.callum_damage_sound()
 
@@ -292,6 +365,15 @@ class Level1(tools._State):
         self.check_witch1_limits()
         self.check_witch2_limits()
         self.check_witch3_limits()
+        self.check_witch4_limits()
+        self.check_witch5_limits()
+        self.check_witch6_limits()
+        self.check_witch7_limits()
+        self.check_morcego1_limits()
+        self.check_morcego2_limits()
+        self.check_morcego3_limits()
+        self.check_morcego4_limits()
+
 
     def adjust_witch1_position(self):
         self.last_x_position = self.witch1.rect.right
@@ -307,6 +389,37 @@ class Level1(tools._State):
         self.last_x_position = self.witch3.rect.right
         self.witch3.rect.x += round(self.witch3.vel.x)
         self.witch3.rect.y += round(self.witch3.vel.y)
+
+    def adjust_witch4_position(self):
+        self.last_x_position = self.witch4.rect.right
+        self.witch4.rect.x += round(self.witch4.vel.x)
+        self.witch4.rect.y += round(self.witch4.vel.y)
+
+    def adjust_witch5_position(self):
+        self.last_x_position = self.witch5.rect.right
+        self.witch5.rect.x += round(self.witch5.vel.x)
+        self.witch5.rect.y += round(self.witch5.vel.y)
+    def adjust_witch6_position(self):
+        self.last_x_position = self.witch6.rect.right
+        self.witch6.rect.x += round(self.witch6.vel.x)
+        self.witch6.rect.y += round(self.witch6.vel.y)
+
+    def adjust_witch7_position(self):
+        self.last_x_position = self.witch7.rect.right
+        self.witch7.rect.x += round(self.witch7.vel.x)
+        self.witch7.rect.y += round(self.witch7.vel.y)
+    def adjust_morcego1_position(self):
+        self.last_x_position = self.morcego1.rect.right
+        self.morcego1.rect.x += round(self.morcego1.vel.x)
+    def adjust_morcego2_position(self):
+        self.last_x_position = self.morcego2.rect.right
+        self.morcego2.rect.x += round(self.morcego2.vel.x)
+    def adjust_morcego3_position(self):
+        self.last_x_position = self.morcego3.rect.right
+        self.morcego3.rect.x += round(self.morcego3.vel.x)
+    def adjust_morcego4_position(self):
+        self.last_x_position = self.morcego4.rect.right
+        self.morcego4.rect.x += round(self.morcego4.vel.x)
 
     def adjust_callum_position(self):
         self.last_x_position = self.callum.rect.right
@@ -353,6 +466,14 @@ class Level1(tools._State):
         self.witch_group.add(self.witch1)
         self.witch_group.add(self.witch2)
         self.witch_group.add(self.witch3)
+        self.witch_group.add(self.witch4)
+        self.witch_group.add(self.witch5)
+        self.witch_group.add(self.witch6)
+        self.witch_group.add(self.witch7)
+        self.witch_group.add(self.morcego1)
+        self.witch_group.add(self.morcego2)
+        self.witch_group.add(self.morcego3)
+        self.witch_group.add(self.morcego4)
 
         self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
 
@@ -427,6 +548,15 @@ class Level1(tools._State):
         self.witch1.update(self.game_info)
         self.witch2.update(self.game_info)
         self.witch3.update(self.game_info)
+        self.witch4.update(self.game_info)
+        self.witch5.update(self.game_info)
+        self.witch6.update(self.game_info)
+        self.witch7.update(self.game_info)
+        self.morcego1.update(self.game_info)
+        self.morcego2.update(self.game_info)
+        self.morcego3.update(self.game_info)
+        self.morcego4.update(self.game_info)
+
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
