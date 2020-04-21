@@ -11,7 +11,6 @@ class Level1(tools._State):
 
 
     def startup(self, current_time, persist):
-        print(persist)
         self.game_info = persist
         self.game_info[c.CURRENT_TIME] = current_time
         self.game_info[c.CALLUM_DEAD] = False
@@ -49,7 +48,7 @@ class Level1(tools._State):
         self.level_rect = self.level.get_rect()
         self.camera = setup.TELA.get_rect(bottom=self.level_rect.bottom)
         self.camera.x = 0
-        print(self.game_info)
+
 
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
@@ -194,23 +193,29 @@ class Level1(tools._State):
 
         if ground:
             self.adjust_callum_position_for_y_collision_ground(ground)
+
         elif plataforma:
             self.adjust_callum_position_for_y_collision_plataforma(plataforma)
+
         elif teto:
             self.adjust_callum_position_for_y_collision_teto(teto)
+
         elif agua:
             if agua.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = agua.rect.top
-                #self.callum.star_death(self.game_info)
-                self.callum.number_of_lifes -= 1
+                self.callum.star_death(self.game_info)
+                #self.callum.number_of_lifes -= 1
+
         elif espinho:
             if espinho.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = espinho.rect.top
-                #self.callum.star_death(self.game_info)
-                self.callum_damage_sound()
-                self.callum.number_of_lifes -= 1
+                if self.callum.die_timer == 0:
+                    self.callum_damage_sound()
+                self.callum.star_death(self.game_info)
+                #self.callum.number_of_lifes -= 1
+
         if ground == None and plataforma == None:
             if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
@@ -240,7 +245,7 @@ class Level1(tools._State):
                     self.callum.rect.left += 25
                     self.callum.vel.x = + 5
                 self.callum_damage_sound()
-        print(self.callum.vel.x)
+
 
     def callum_damage_sound(self):
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
@@ -339,7 +344,7 @@ class Level1(tools._State):
         setup.TELA.blit(self.heart_image, self.heart_rect)
 
         if self.callum.number_of_lifes > 1:
-            print("heart")
+
             self.heart_image2 = self.get_heart_image(0, 0, 16, 16)
             self.heart_image2.set_colorkey(c.BLACK)
             self.heart_rect2 = self.heart_image2.get_rect()
@@ -361,12 +366,11 @@ class Level1(tools._State):
         self.update_all_sprites(keys)
         self.blit_tela(surface)
 
+
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
-
-        print(self.callum.rect.midbottom)
 
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
@@ -378,7 +382,6 @@ class Level1(tools._State):
             mult = 1
             new = self.camera.x + mult * self.callum.vel.x
             self.camera.x = new
-            #print("teste")
 
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info)
@@ -390,7 +393,11 @@ class Level1(tools._State):
 
     def end_game(self):
         self.next = c.GAME_OVER
-        self.done = True
+        if self.callum.die_timer == 150:
+            self.done = True
+
+
+
 
 
 

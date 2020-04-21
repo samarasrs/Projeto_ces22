@@ -28,6 +28,10 @@ GOLD         = (255, 215,   0)
 # Callum
 SIZE_MULTIPLIER = 3
 
+#looking
+
+RIGHT = 'right'
+LEFT = 'left'
 
 #estados Callum
 STAND = 'standing'

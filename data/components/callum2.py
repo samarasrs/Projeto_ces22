@@ -8,19 +8,19 @@ class Callum(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['callum']
-        self.state = c.STAND
-        self.state_ant = c.STAND
+        self.state = c.WALK
         self.walking_timer = 0
         self.jumping_timer = 0
         self.current_frame = 0
+        self.die_timer = 0
         self.allow_jump = True
         self.dead = False
         self.setup_force()
         self.load_images()
-
+        self.looking = c.RIGHT
         self.number_of_lifes = 3
 
-        self.image = self.standing_frames[0]
+        self.image = self.walking_normal_frames_r[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
 
@@ -33,6 +33,7 @@ class Callum(pg.sprite.Sprite):
         self.x_accel = c.WALK_ACCEL
         self.jump_vel = c.JUMP_VEL
         self.gravity = c.GRAVITY
+
 
 # IMAGEM
 
@@ -48,9 +49,9 @@ class Callum(pg.sprite.Sprite):
         return image
 
     def load_images(self):
-        self.standing_frames = [self.get_image(68, 10, 20, 21)]
-        for frame in self.standing_frames:
-            frame.set_colorkey(c.BLACK)
+        #self.standing_frames = [self.get_image(68, 10, 20, 21)]
+        #for frame in self.standing_frames:
+            #frame.set_colorkey(c.BLACK)
         self.walking_normal_frames_r = [self.get_image(5, 42, 20, 20),
                                self.get_image(35, 40, 20, 20),
                                self.get_image(68, 41, 20, 20),
@@ -73,7 +74,7 @@ class Callum(pg.sprite.Sprite):
             self.jump_frame_l.append(pg.transform.flip(frame, True, False))
 
 
-        self.dying_frames_r = [self.get_image(166, 244, 21, 13), self.get_image(166, 244, 21, 13), self.get_image(166, 244, 21, 13)]
+        self.dying_frames_r = [self.get_image(166, 244, 21, 13)]
         for frame in self.dying_frames_r:
             frame.set_colorkey(c.BLACK)
         self.dying_frames_l = [pg.transform.flip(self.get_image(166, 244, 21, 13), True, False)]
@@ -89,11 +90,17 @@ class Callum(pg.sprite.Sprite):
         self.gravity = c.JUMP_GRAVITY
         self.vel.y += self.gravity
         self.jumping_timer = self.current_time
+
         if (self.current_time - self.jumping_timer >
                     self.calculate_animation_speed()):
             self.current_frame = (self.current_frame + 1) % len(self.jump_frame_r)
+
         if self.vel.x == 0:
-            self.image = self.standing_frames[0]
+            if self.looking == c.RIGHT:
+                self.image = self.jump_frame_r[0]
+            else:
+                self.image = self.jump_frame_l[0]
+
         elif self.vel.x > 0:
             self.image = self.jump_frame_r[self.current_frame]
         else:
@@ -105,10 +112,11 @@ class Callum(pg.sprite.Sprite):
             self.state_ant = c.JUMP
 
         if keys[tools.keybinding['left']]:
+            self.looking = c.LEFT
             if abs(self.vel.x) < self.max_x_vel:
                 self.vel.x -= self.x_accel
-
         elif keys[tools.keybinding['right']]:
+            self.looking = c.RIGHT
             if self.vel.x < self.max_x_vel:
                 self.vel.x += self.x_accel
 
@@ -116,17 +124,19 @@ class Callum(pg.sprite.Sprite):
             self.gravity = c.GRAVITY
             self.state = c.FALL
             self.state_ant = c.JUMP
+        self.current_frame = 0
+
 
     def walking(self, keys):
         self.check_to_allow_jump(keys)
-        if self.state_ant == c.STAND:
-            self.state_ant = c.WALK
+        if self.vel.x == 0:
             self.walking_timer = self.current_time
             self.current_frame = 0
-        else:
-            if (self.current_time - self.walking_timer >
+
+        if (self.current_time - self.walking_timer >
                     self.calculate_animation_speed()):
-                self.current_frame = (self.current_frame + 1) % len(self.walking_normal_frames_r)
+            self.current_frame = (self.current_frame + 1) % len(self.walking_normal_frames_r)
+
         if keys[tools.keybinding['jump']]:
             if self.allow_jump:
                 self.state = c.JUMP
@@ -137,8 +147,8 @@ class Callum(pg.sprite.Sprite):
                 else:
                     self.vel.y = c.JUMP_VEL
 
-
         if keys[tools.keybinding['left']]:
+            self.looking = c.LEFT
             self.image = self.walking_normal_frames_l[self.current_frame]
             if abs(self.vel.x) < self.max_x_vel:
                 self.vel.x -= self.x_accel
@@ -148,6 +158,7 @@ class Callum(pg.sprite.Sprite):
                 self.vel.x += self.x_accel
 
         elif keys[tools.keybinding['right']]:
+            self.looking = c.RIGHT
             self.image = self.walking_normal_frames_r[self.current_frame]
             if self.vel.x < self.max_x_vel:
                 self.vel.x += self.x_accel
@@ -163,35 +174,13 @@ class Callum(pg.sprite.Sprite):
 
             else:
                 self.vel.x = 0
-                self.state = c.STAND
-                self.state_ant = c.WALK
 
             if self.vel.x < 0:
                 self.image = self.walking_normal_frames_l[self.current_frame]
                 self.vel.x += self.x_accel
 
-
             else:
                 self.vel.x = 0
-                self.state = c.STAND
-                self.state_ant = c.WALK
-
-    def standing(self, keys):
-        self.check_to_allow_jump(keys)
-        self.image = self.standing_frames[0]
-        self.vel = vec(0, 0)
-
-        if keys[tools.keybinding['left']] or keys[tools.keybinding['right']]:
-            self.state = c.WALK
-            self.state_ant = c.STAND
-        elif keys[tools.keybinding['jump']]:
-            if self.allow_jump:
-                self.state = c.JUMP
-                self.current_frame = 0
-                self.state_ant = c.STAND
-                self.vel.y = c.JUMP_VEL
-        else:
-            self.state = c.STAND
 
     def falling(self, keys):
         if self.vel.y < c.MAX_Y_VEL:
@@ -207,17 +196,14 @@ class Callum(pg.sprite.Sprite):
 
     def die(self):
         if self.vel.x >= 0:
-            self.image = self.dying_frames_r[0]
-        else:
-            self.image = self.dying_frames_l[0]
+                self.image = self.dying_frames_r[0]
+                self.die_timer += 1
         self.vel.x = 0
-
 
     def star_death(self, game_info):
         self.dead = True
         game_info[c.CALLUM_DEAD] = True
         self.die()
-
 
     def calculate_animation_speed(self):
         if self.vel.x== 0:
@@ -228,11 +214,8 @@ class Callum(pg.sprite.Sprite):
             animation_speed = 90 - (self.vel.x * (9) * -1)
         return animation_speed
 
-
     def handle_states(self,keys):
-        if self.state == c.STAND:
-            self.standing(keys)
-        elif self.state == c.WALK:
+        if self.state == c.WALK:
             self.walking(keys)
         elif self.state == c.JUMP:
             self.jumping(keys)
@@ -240,7 +223,6 @@ class Callum(pg.sprite.Sprite):
             self.falling(keys)
         elif self.state == c.DEAD:
             self.die()
-
 
 # UPDATE
 
