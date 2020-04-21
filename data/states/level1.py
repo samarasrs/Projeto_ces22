@@ -161,12 +161,10 @@ class Level1(tools._State):
 
         self.group_barraca = pg.sprite.Group(barraca_rect)
 
-    def tela_fim_do_level(self):
+    '''def tela_fim_do_level(self):
         self.imagem = pg.Surface((c.TELA_LARGURA, c.TELA_ALTURA))
         self.imagem.set_alpha(130)
-        self.imagem.fill(c.GRAY)
-
-
+        self.imagem.fill(c.GRAY)'''
 
 # CHECKS
     def check_witch1_limits(self):
