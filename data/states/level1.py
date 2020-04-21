@@ -26,6 +26,7 @@ class Level1(tools._State):
         self.setup_callum()
         self.setup_witch()
         self.setup_spritegroups()
+        self.setup_barraca()
 
 # SETUPS
     def setup_witch(self):
@@ -48,7 +49,6 @@ class Level1(tools._State):
         self.level_rect = self.level.get_rect()
         self.camera = setup.TELA.get_rect(bottom=self.level_rect.bottom)
         self.camera.x = 0
-
 
     def setup_ground(self):
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
@@ -156,6 +156,18 @@ class Level1(tools._State):
         self.group_pedra = pg.sprite.Group(pedra_rect1, pedra_rect2, pedra_rect3, pedra_rect4,
                                            pedra_rect5, pedra_rect6, pedra_rect7, pedra_rect8)
 
+    def setup_barraca(self):
+        barraca_rect = obstaculo.Obstaculo(8863, 0, 147, 600)
+
+        self.group_barraca = pg.sprite.Group(barraca_rect)
+
+    def tela_fim_do_level(self):
+        self.imagem = pg.Surface((c.TELA_LARGURA, c.TELA_ALTURA))
+        self.imagem.set_alpha(130)
+        self.imagem.fill(c.GRAY)
+
+
+
 # CHECKS
     def check_witch1_limits(self):
         if self.witch1.rect.left <= 590:
@@ -177,12 +189,17 @@ class Level1(tools._State):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
         pedras = pg.sprite.spritecollideany(self.callum, self.group_pedra)
+        barraca = pg.sprite.spritecollideany(self.callum, self.group_barraca)
+
         if collider:
             self.adjust_callum_position_for_x_collision(collider)
         elif pedras:
             self.adjust_callum_position_for_x_collision(pedras)
         elif teto:
             self.adjust_callum_position_for_x_collision(teto)
+        elif barraca:
+            self.adjust_callum_position_for_x_collision(barraca)
+            self.callum.vel.x = 0
 
     def check_callum_y_collisions(self):
         ground = pg.sprite.spritecollideany(self.callum, self.group_ground)
@@ -190,6 +207,7 @@ class Level1(tools._State):
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
         agua = pg.sprite.spritecollideany(self.callum, self.group_agua)
         espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
+        pedra = pg.sprite.spritecollideany(self.callum, self.group_pedra)
 
         if ground:
             self.adjust_callum_position_for_y_collision_ground(ground)
@@ -199,6 +217,9 @@ class Level1(tools._State):
 
         elif teto:
             self.adjust_callum_position_for_y_collision_teto(teto)
+
+        elif pedra:
+            self.adjust_callum_position_for_y_collision_ground(pedra)
 
         elif agua:
             if agua.rect.bottom > self.callum.rect.bottom:
@@ -216,7 +237,7 @@ class Level1(tools._State):
                 self.callum.star_death(self.game_info)
                 #self.callum.number_of_lifes -= 1
 
-        if ground == None and plataforma == None:
+        if ground == None and plataforma == None and pedra == None:
             if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
 
@@ -245,7 +266,6 @@ class Level1(tools._State):
                     self.callum.rect.left += 25
                     self.callum.vel.x = + 5
                 self.callum_damage_sound()
-
 
     def callum_damage_sound(self):
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
@@ -276,6 +296,8 @@ class Level1(tools._State):
         self.check_callum_x_collisions()
         self.callum.rect.y += round(self.callum.vel.y)
         self.check_callum_y_collisions()
+        if self.callum.rect.left == 5:
+            self.callum.vel.x = 0
         if self.callum.rect.x < (self.camera.x + 5):
             self.callum.rect.x = (self.camera.x + 5)
 
@@ -284,7 +306,7 @@ class Level1(tools._State):
             self.callum.rect.right = collider.rect.left
         else:
             self.callum.rect.left = collider.rect.right
-            self.callum.x_vel = 0
+            self.callum.vel.x = 0
 
     def adjust_callum_position_for_y_collision_teto(self, collider):
         if self.callum.rect.y > collider.rect.y:
@@ -309,13 +331,11 @@ class Level1(tools._State):
             self.callum.state = c.WALK
 
     def setup_spritegroups(self):
-        self.callum_and_enemy_group = pg.sprite.Group(self.callum)
         self.witch_group = pg.sprite.Group()
         self.witch_group.add(self.witch1)
         self.witch_group.add(self.witch2)
 
-        self.callum_and_enemy_group.add(self.witch1)
-        self.callum_and_enemy_group.add(self.witch2)
+        self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
 
 # BLIT
     def blit_tela(self, surface):

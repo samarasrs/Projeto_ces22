@@ -19,7 +19,6 @@ class Callum(pg.sprite.Sprite):
         self.load_images()
         self.looking = c.RIGHT
         self.number_of_lifes = 3
-
         self.image = self.walking_normal_frames_r[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
@@ -125,7 +124,6 @@ class Callum(pg.sprite.Sprite):
             self.state = c.FALL
             self.state_ant = c.JUMP
         self.current_frame = 0
-
 
     def walking(self, keys):
         self.check_to_allow_jump(keys)
