@@ -427,8 +427,8 @@ class Level1(tools._State):
         self.check_callum_x_collisions()
         self.callum.rect.y += round(self.callum.vel.y)
         self.check_callum_y_collisions()
-        if self.callum.rect.left == 5:
-            self.callum.vel.x = 0
+        if self.callum.rect.left < 5:
+            self.callum.rect.left = 5
         if self.callum.rect.x < (self.camera.x + 5):
             self.callum.rect.x = (self.camera.x + 5)
 
@@ -531,7 +531,7 @@ class Level1(tools._State):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
-        print(self.callum.rect.midbottom)
+        #print(self.callum.rect.midbottom)
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
             new = self.camera.x + mult * self.callum.vel.x
