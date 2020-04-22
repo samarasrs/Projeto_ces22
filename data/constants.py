@@ -28,6 +28,16 @@ GOLD         = (255, 215,   0)
 # Callum
 SIZE_MULTIPLIER = 3
 
+# POWER
+
+SIZE_MULTIPLIER_POWER = 1
+POWER1 = 'poder1'
+POWER2 = 'poder2'
+FLYING = 'voando'
+EXPLODING = 'explodindo'
+
+
+
 #looking
 
 RIGHT = 'right'

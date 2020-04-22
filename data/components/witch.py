@@ -48,7 +48,7 @@ class Witch(pg.sprite.Sprite):
         if self.is_witch:
             image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
         else:
-            print("morcego")
+            #print("morcego")
             image.blit(self.sprite_sheet_morcego, (0, 0), (x, y, width, height))
         image = pg.transform.scale(image,
                                    (int(rect.width * c.SIZE_MULTIPLIER),

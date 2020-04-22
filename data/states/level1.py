@@ -208,6 +208,7 @@ class Level1(tools._State):
             self.witch3.vel.x = self.witch3.vel.x * (-1)
 
         self.adjust_witch3_position()
+    
     def check_witch4_limits(self):
         if self.witch4.rect.left <= 1280:
             self.witch4.vel.x = self.witch4.vel.x * (-1)
@@ -215,6 +216,7 @@ class Level1(tools._State):
             self.witch4.vel.x = self.witch4.vel.x * (-1)
 
         self.adjust_witch4_position()
+    
     def check_witch5_limits(self):
         if self.witch5.rect.left <= 2250:
             self.witch5.vel.x = self.witch5.vel.x * (-1)
@@ -222,6 +224,7 @@ class Level1(tools._State):
             self.witch5.vel.x = self.witch5.vel.x * (-1)
 
         self.adjust_witch5_position()
+    
     def check_witch6_limits(self):
         if self.witch6.rect.left <= 4440:
             self.witch6.vel.x = self.witch6.vel.x * (-1)
@@ -229,6 +232,7 @@ class Level1(tools._State):
             self.witch6.vel.x = self.witch6.vel.x * (-1)
 
         self.adjust_witch6_position()
+    
     def check_witch7_limits(self):
         if self.witch7.rect.left <= 8100:
             self.witch7.vel.x = self.witch7.vel.x * (-1)
@@ -236,6 +240,7 @@ class Level1(tools._State):
             self.witch7.vel.x = self.witch7.vel.x * (-1)
 
         self.adjust_witch7_position()
+   
     def check_morcego1_limits(self):
         if self.morcego1.rect.left <= 3700:
             self.morcego1.vel.x = self.morcego1.vel.x * (-1)
@@ -243,6 +248,7 @@ class Level1(tools._State):
             self.morcego1.vel.x = self.morcego1.vel.x * (-1)
 
         self.adjust_morcego1_position()
+    
     def check_morcego2_limits(self):
         if self.morcego2.rect.left <= 5200:
             self.morcego2.vel.x = self.morcego2.vel.x * (-1)
@@ -266,6 +272,7 @@ class Level1(tools._State):
             self.morcego4.vel.x = self.morcego4.vel.x * (-1)
 
         self.adjust_morcego4_position()
+    
     def check_callum_x_collisions(self):
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -356,6 +363,26 @@ class Level1(tools._State):
         for witch in self.witch_group:
             if witch.dead == True:
                 witch.star_death()
+
+    def setup_spritegroups(self):
+        self.witch_group = pg.sprite.Group()
+        self.witch_group.add(self.witch1)
+        self.witch_group.add(self.witch2)
+        self.witch_group.add(self.witch3)
+        self.witch_group.add(self.witch4)
+        self.witch_group.add(self.witch5)
+        self.witch_group.add(self.witch6)
+        self.witch_group.add(self.witch7)
+        self.witch_group.add(self.morcego1)
+        self.witch_group.add(self.morcego2)
+        self.witch_group.add(self.morcego3)
+        self.witch_group.add(self.morcego4)
+
+        self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
+
+        #poder
+        self.power1_group = pg.sprite.Group()
+
 # AJUSTES
 
     def adjust_sprites_positions(self):
@@ -373,7 +400,8 @@ class Level1(tools._State):
         self.check_morcego2_limits()
         self.check_morcego3_limits()
         self.check_morcego4_limits()
-
+        for power in self.power1_group:
+            self.adjust_power1_position(power)
 
     def adjust_witch1_position(self):
         self.last_x_position = self.witch1.rect.right
@@ -399,6 +427,7 @@ class Level1(tools._State):
         self.last_x_position = self.witch5.rect.right
         self.witch5.rect.x += round(self.witch5.vel.x)
         self.witch5.rect.y += round(self.witch5.vel.y)
+
     def adjust_witch6_position(self):
         self.last_x_position = self.witch6.rect.right
         self.witch6.rect.x += round(self.witch6.vel.x)
@@ -408,15 +437,19 @@ class Level1(tools._State):
         self.last_x_position = self.witch7.rect.right
         self.witch7.rect.x += round(self.witch7.vel.x)
         self.witch7.rect.y += round(self.witch7.vel.y)
+
     def adjust_morcego1_position(self):
         self.last_x_position = self.morcego1.rect.right
         self.morcego1.rect.x += round(self.morcego1.vel.x)
+
     def adjust_morcego2_position(self):
         self.last_x_position = self.morcego2.rect.right
         self.morcego2.rect.x += round(self.morcego2.vel.x)
+
     def adjust_morcego3_position(self):
         self.last_x_position = self.morcego3.rect.right
         self.morcego3.rect.x += round(self.morcego3.vel.x)
+
     def adjust_morcego4_position(self):
         self.last_x_position = self.morcego4.rect.right
         self.morcego4.rect.x += round(self.morcego4.vel.x)
@@ -461,26 +494,22 @@ class Level1(tools._State):
             self.callum.rect.bottom = collider.rect.top
             self.callum.state = c.WALK
 
-    def setup_spritegroups(self):
-        self.witch_group = pg.sprite.Group()
-        self.witch_group.add(self.witch1)
-        self.witch_group.add(self.witch2)
-        self.witch_group.add(self.witch3)
-        self.witch_group.add(self.witch4)
-        self.witch_group.add(self.witch5)
-        self.witch_group.add(self.witch6)
-        self.witch_group.add(self.witch7)
-        self.witch_group.add(self.morcego1)
-        self.witch_group.add(self.morcego2)
-        self.witch_group.add(self.morcego3)
-        self.witch_group.add(self.morcego4)
+    def adjust_power1_position(self,power1):
+        if power1.state == c.FLYING:
+            if power1.looking ==c.RIGHT:
+                power1.rect.centery = self.callum.rect.centery+13
+                power1.rect.x = self.callum.rect.right-2
+            else:
+                power1.rect.centery = self.callum.rect.centery+15
+                power1.rect.right = (self.callum.rect.left+3)
 
-        self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
 
 # BLIT
+
     def blit_tela(self, surface):
         self.level.blit(self.background, self.camera, self.camera)
         self.callum_and_enemy_group.draw(self.level)
+        self.power1_group.draw(self.level)
         surface.blit(self.level, (0, 0), self.camera)
         self.show_heart()
 
@@ -519,13 +548,12 @@ class Level1(tools._State):
             self.heart_rect3.y = 0
             setup.TELA.blit(self.heart_image3, self.heart_rect3)
 
-
 # UPDATES
+
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.update_all_sprites(keys)
         self.blit_tela(surface)
-
 
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
@@ -544,7 +572,7 @@ class Level1(tools._State):
             self.camera.x = new
 
     def update_all_sprites(self, keys):
-        self.callum.update(keys, self.game_info)
+        self.callum.update(keys, self.game_info, self.power1_group)
         self.witch1.update(self.game_info)
         self.witch2.update(self.game_info)
         self.witch3.update(self.game_info)

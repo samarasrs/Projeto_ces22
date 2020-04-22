@@ -4,7 +4,8 @@ from . import game_sound as gs
 
 # definindo as teclas a serem utilizadas no jogo
 keybinding = {
-    'action': pg.K_s,
+    'action1': pg.K_s,
+    'action2': pg.K_a,
     'jump': pg.K_UP,
     'left': pg.K_LEFT,
     'right': pg.K_RIGHT,
