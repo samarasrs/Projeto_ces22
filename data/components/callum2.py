@@ -82,7 +82,7 @@ class Callum(pg.sprite.Sprite):
             self.jump_frame_l.append(pg.transform.flip(frame, True, False))
 
 
-        self.dying_frames_r = [self.get_image(166, 244, 21, 13)]
+        self.dying_frames_r =  [self.get_image(166, 233, 21, 24)] #[self.get_image(166, 244, 21, 13)] 
         for frame in self.dying_frames_r:
             frame.set_colorkey(c.BLACK)
         self.dying_frames_l = [pg.transform.flip(self.get_image(166, 244, 21, 13), True, False)]
