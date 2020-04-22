@@ -8,6 +8,7 @@ from .. import game_sound as gs
 class Menu(tools._State):
     def __init__(self):
         tools._State.__init__(self)
+        # o persist vai definir as variaveis iniciais do jogo
         persist = {c.SCORE: 0,
                    c.VIDAS: 3,
                    c.CURRENT_TIME: 0.0,

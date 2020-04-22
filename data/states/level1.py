@@ -5,12 +5,16 @@ from .. import constants as c
 from ..components import obstaculo, callum2, witch
 
 
+
 class Level1(tools._State):
+    # classe do level 1
     def __init__(self):
+        # classe filha de State
         tools._State.__init__(self)
 
 
     def startup(self, current_time, persist):
+        # metodo que insere os dados iniciais no level
         self.game_info = persist
         self.game_info[c.CURRENT_TIME] = current_time
         self.game_info[c.CALLUM_DEAD] = False
@@ -30,6 +34,7 @@ class Level1(tools._State):
 
 # SETUPS
     def setup_witch(self):
+        # criando os objetos inimigos e atribuindo uma posição para eles
         self.witch1 = witch.Witch(True)
         self.witch1.rect.midbottom = (742, 283)
         self.witch2 = witch.Witch(True)
@@ -54,21 +59,27 @@ class Level1(tools._State):
         self.morcego4.rect.midbottom = (7300, 300)
 
     def setup_callum(self):
+        # criando o heroi e posicionando ele na tela
         self.callum = callum2.Callum()
         self.callum.rect.x = self.camera.x + 30
         self.callum.rect.bottom = 493
 
     def setup_background(self):
+        # inserindo o background do cenario
+        # definindo o local onde esta o background
         self.background = setup.GFX['Map_jogo_teste']
+        # criando um retangulo para o background
         self.back_rect = self.background.get_rect()
         largura = self.back_rect.width
         altura = self.back_rect.height
         self.level = pg.Surface((largura, altura)).convert()
         self.level_rect = self.level.get_rect()
+        # fazendo configurações iniciais da camera
         self.camera = setup.TELA.get_rect(bottom=self.level_rect.bottom)
         self.camera.x = 0
 
     def setup_ground(self):
+        # definindo o que será chão
         ground_rect1 = obstaculo.Obstaculo(0, 493, 175, 107)
         ground_rect2 = obstaculo.Obstaculo(172.4, 388, 178, 212)
         ground_rect3 = obstaculo.Obstaculo(172.4, 388, 178, 212)
@@ -98,6 +109,7 @@ class Level1(tools._State):
         ground_rect27 = obstaculo.Obstaculo(6241, 397, 692, 203)
         ground_rect28 = obstaculo.Obstaculo(6937, 324, 2088, 276)
 
+        # atribuindo todos os objetos num único grupo
         self.group_ground = pg.sprite.Group(ground_rect1, ground_rect2, ground_rect3, ground_rect4,
                                             ground_rect5, ground_rect6, ground_rect7, ground_rect8,
                                             ground_rect9,
@@ -108,6 +120,7 @@ class Level1(tools._State):
                                             ground_rect26, ground_rect27, ground_rect28)
 
     def setup_teto(self):
+        # definindo os objetos tetos e onde estão posicionados
         teto_rect1 = obstaculo.Obstaculo(0, 0, 173, 246)
         teto_rect2 = obstaculo.Obstaculo(173, 0, 776, 103)
         teto_rect3 = obstaculo.Obstaculo(949, 0, 988, 67)
@@ -123,33 +136,41 @@ class Level1(tools._State):
         teto_rect13 = obstaculo.Obstaculo(2352, 301, 209, 86)
         teto_rect14 = obstaculo.Obstaculo(2704, 0, 1657, 66)
 
+        # atribuindo os objetos no mesmo grupo
         self.group_teto = pg.sprite.Group(teto_rect1, teto_rect2, teto_rect3, teto_rect4,
                                           teto_rect5, teto_rect6, teto_rect7, teto_rect8,
                                           teto_rect9, teto_rect10, teto_rect11, teto_rect12,
                                           teto_rect13, teto_rect14)
 
     def setup_agua(self):
+        # definindo os objetos água e seu posicionamento
         agua_rect1 = obstaculo.Obstaculo(1547, 566, 354, 34)
         agua_rect2 = obstaculo.Obstaculo(2824, 563, 611, 37)
         agua_rect3 = obstaculo.Obstaculo(5034, 544, 123, 56)
         agua_rect4 = obstaculo.Obstaculo(5356, 544, 250, 56)
 
+        # atribuindo os objetos no mesmo grupo
         self.group_agua = pg.sprite.Group(agua_rect1, agua_rect2, agua_rect3, agua_rect4)
 
+    #### estamos utilizando a gaiola????
     def setup_gaiola(self):
+        #
         gaiola_rect1 = obstaculo.Obstaculo(1434, 334, 51, 86)
 
         self.group_gaiola = pg.sprite.Group(gaiola_rect1)
 
     def setup_espinhos(self):
+        # definindo os objetos espinhos e onde estão posicionados
         espinho_rect1 = obstaculo.Obstaculo(350, 421, 144, 179)
         espinho_rect2 = obstaculo.Obstaculo(771, 565, 140, 35)
         espinho_rect3 = obstaculo.Obstaculo(1123, 317, 73, 28)
         espinho_rect4 = obstaculo.Obstaculo(1334, 283, 76, 26)
 
+        # atribuindo os objetos no mesmo grupo
         self.group_espinho = pg.sprite.Group(espinho_rect1, espinho_rect2, espinho_rect3, espinho_rect4)
 
     def setup_plataformas(self):
+        # definindo os objetos plataforma e onde estão posicionados
         plataforma_rect1 = obstaculo.Obstaculo(1654, 389, 110, 37)
         plataforma_rect2= obstaculo.Obstaculo(2905, 381, 110, 37)
         plataforma_rect3 = obstaculo.Obstaculo(3076, 274, 110, 37)
@@ -158,10 +179,12 @@ class Level1(tools._State):
         plataforma_rect6 = obstaculo.Obstaculo(5713, 102, 181, 71)
         plataforma_rect7 = obstaculo.Obstaculo(5943, 265, 186, 75)
 
+        #atribuindo os objetos no mesmo grupo
         self.group_plataforma = pg.sprite.Group(plataforma_rect1, plataforma_rect2, plataforma_rect3, plataforma_rect4,
                                                 plataforma_rect5, plataforma_rect6, plataforma_rect7)
 
     def setup_pedras(self):
+        # definindo os objetos pedras e onde estão localizados
         pedra_rect1 = obstaculo.Obstaculo(5800, 28, 94, 95)
         pedra_rect2 = obstaculo.Obstaculo(7686, 228, 155, 372)
         pedra_rect3 = obstaculo.Obstaculo(7755, 192, 87, 408)
@@ -171,12 +194,15 @@ class Level1(tools._State):
         pedra_rect7 = obstaculo.Obstaculo(6426, 370, 41, 230)
         pedra_rect8 = obstaculo.Obstaculo(6664, 373, 34, 227)
 
+        # atribuindo os objetos no mesmo grupo
         self.group_pedra = pg.sprite.Group(pedra_rect1, pedra_rect2, pedra_rect3, pedra_rect4,
                                            pedra_rect5, pedra_rect6, pedra_rect7, pedra_rect8)
 
     def setup_barraca(self):
+        # definindo o objeto barraca e onde está posicionada
         barraca_rect = obstaculo.Obstaculo(8863, 0, 147, 600)
 
+        # criando um grupo para ela
         self.group_barraca = pg.sprite.Group(barraca_rect)
 
     '''def tela_fim_do_level(self):
@@ -185,6 +211,8 @@ class Level1(tools._State):
         self.imagem.fill(c.GRAY)'''
 
 # CHECKS
+
+    ### todos os checks dos inimigos são bem parecidos, não daria para criar uma única função?
     def check_witch1_limits(self):
         if self.witch1.rect.left <= 590:
             self.witch1.vel.x = self.witch1.vel.x * (-1)
@@ -274,11 +302,14 @@ class Level1(tools._State):
         self.adjust_morcego4_position()
     
     def check_callum_x_collisions(self):
+        # checando as colisões do heroi no eixo x
+        # fazendo a verificação se o heroi colide com algum dos objetos abaixo
         collider = pg.sprite.spritecollideany(self.callum, self.group_ground)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
         pedras = pg.sprite.spritecollideany(self.callum, self.group_pedra)
         barraca = pg.sprite.spritecollideany(self.callum, self.group_barraca)
 
+        # se houver colisão, deve-se chamar a função para ajustar a posição
         if collider:
             self.adjust_callum_position_for_x_collision(collider)
         elif pedras:
@@ -290,6 +321,8 @@ class Level1(tools._State):
             self.callum.vel.x = 0
 
     def check_callum_y_collisions(self):
+        # checando as colisões do heroi no eixo y
+        # fazendo a verificação se o heroi colide com algum dos objetos abaixo
         ground = pg.sprite.spritecollideany(self.callum, self.group_ground)
         plataforma = pg.sprite.spritecollideany(self.callum, self.group_plataforma)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
@@ -297,25 +330,22 @@ class Level1(tools._State):
         espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
         pedra = pg.sprite.spritecollideany(self.callum, self.group_pedra)
 
+        # se houver colisão com objetos que não matam, chama a função para ajustar posição
+        # caso o objeto "mate" o heroi, chama a função "star_death"
         if ground:
             self.adjust_callum_position_for_y_collision_ground(ground)
-
         elif plataforma:
             self.adjust_callum_position_for_y_collision_plataforma(plataforma)
-
         elif teto:
             self.adjust_callum_position_for_y_collision_teto(teto)
-
         elif pedra:
             self.adjust_callum_position_for_y_collision_ground(pedra)
-
         elif agua:
             if agua.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = agua.rect.top
                 self.callum.star_death(self.game_info)
                 #self.callum.number_of_lifes -= 1
-
         elif espinho:
             if espinho.rect.bottom > self.callum.rect.bottom:
                 self.callum.vel.y = 0
@@ -324,13 +354,13 @@ class Level1(tools._State):
                     self.callum_damage_sound()
                 self.callum.star_death(self.game_info)
                 #self.callum.number_of_lifes -= 1
-
         if ground == None and plataforma == None and pedra == None:
             if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
                 self.callum.state = c.FALL
 
     def check_callum_dead(self):
-
+        # verifica se o heroi está morto
+        # estando morto, muda o estado do jogo para c.CALLUM_DEAD, dando fim ao jogo
         if self.callum.number_of_lifes == 0:
             self.game_info[c.CALLUM_DEAD] = True
         if self.callum.rect.y > c.TELA_ALTURA:
@@ -340,7 +370,9 @@ class Level1(tools._State):
             self.callum.star_death(self.game_info)
             self.end_game()
 
+    #### essa função nao poderia ser mesclada com check_callum_x_collisions?? talvez conserte o bug do game over
     def check_witch_damage(self):
+        # verificando se o heroi toma dano dos herois
         hits = pg.sprite.spritecollide(self.callum, self.witch_group, False)
 
         for hit in hits:
@@ -356,15 +388,18 @@ class Level1(tools._State):
                 self.callum_damage_sound()
 
     def callum_damage_sound(self):
+        # definindo um som para a dano no heroi
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
         self.pain.play()
 
     def check_witch_life(self):
+        # verificando se a bruxa ainda está vida, se não, chama a função star_death
         for witch in self.witch_group:
             if witch.dead == True:
                 witch.star_death()
 
     def setup_spritegroups(self):
+        # definindo os grupos dos inimigos
         self.witch_group = pg.sprite.Group()
         self.witch_group.add(self.witch1)
         self.witch_group.add(self.witch2)
@@ -378,14 +413,16 @@ class Level1(tools._State):
         self.witch_group.add(self.morcego3)
         self.witch_group.add(self.morcego4)
 
+        # criando um grupo para todos os personagens
         self.callum_and_enemy_group = pg.sprite.Group(self.callum, self.witch_group)
 
-        #poder
+        # criando um grupo para os poderes
         self.power1_group = pg.sprite.Group()
 
 # AJUSTES
 
     def adjust_sprites_positions(self):
+        # chama as funções para ajustar cada sprite na tela
         self.adjust_callum_position()
         self.check_witch_damage()
         self.check_witch_life()
@@ -403,6 +440,7 @@ class Level1(tools._State):
         for power in self.power1_group:
             self.adjust_power1_position(power)
 
+    ### poderia ser feito uma função para ajustar todos os inimigos
     def adjust_witch1_position(self):
         self.last_x_position = self.witch1.rect.right
         self.witch1.rect.x += round(self.witch1.vel.x)
@@ -455,6 +493,7 @@ class Level1(tools._State):
         self.morcego4.rect.x += round(self.morcego4.vel.x)
 
     def adjust_callum_position(self):
+        # ajusta o sprite do callum na tela no eixo X e Y
         self.last_x_position = self.callum.rect.right
         self.callum.rect.x += round(self.callum.vel.x)
         self.check_callum_x_collisions()
@@ -466,6 +505,7 @@ class Level1(tools._State):
             self.callum.rect.x = (self.camera.x + 5)
 
     def adjust_callum_position_for_x_collision(self, collider):
+        # ajusta a posição do heroi no eixo x
         if self.callum.rect.x < collider.rect.x:
             self.callum.rect.right = collider.rect.left
         else:
@@ -473,12 +513,14 @@ class Level1(tools._State):
             self.callum.vel.x = 0
 
     def adjust_callum_position_for_y_collision_teto(self, collider):
+        # ajusta a posição do heroi no eixo y em relação ao teto
         if self.callum.rect.y > collider.rect.y:
             self.callum.rect.top = collider.rect.bottom
             self.callum.vel.y = 7
             self.callum.state = c.FALL
 
     def adjust_callum_position_for_y_collision_ground(self, collider):
+        # ajusta a posição do heroi no eixo y em relação ao chão
         if collider.rect.bottom > self.callum.rect.bottom:
             self.callum.vel.y = 0
             self.callum.rect.bottom = collider.rect.top
@@ -489,12 +531,14 @@ class Level1(tools._State):
             self.callum.state = c.FALL
 
     def adjust_callum_position_for_y_collision_plataforma(self, collider):
+        # ajusta a posição do heroi no eixo y em relação à plataforma
         if collider.rect.y >= self.callum.rect.y:
             self.callum.vel.y = 0
             self.callum.rect.bottom = collider.rect.top
             self.callum.state = c.WALK
 
     def adjust_power1_position(self,power1):
+        # ajustando a posição do poder 1(raio) do heroi(esse poder acompanha o heroi)
         if power1.state == c.FLYING:
             if power1.looking ==c.RIGHT:
                 power1.rect.centery = self.callum.rect.centery+13
@@ -503,17 +547,22 @@ class Level1(tools._State):
                 power1.rect.centery = self.callum.rect.centery+15
                 power1.rect.right = (self.callum.rect.left+3)
 
-
 # BLIT
 
     def blit_tela(self, surface):
+        # desenhando na janela apenas a area definida pela camera
         self.level.blit(self.background, self.camera, self.camera)
+        # desenhando o heroi e os inimigos na tela
         self.callum_and_enemy_group.draw(self.level)
+        # desenhando o poder na tela
         self.power1_group.draw(self.level)
+        #### ???????????
         surface.blit(self.level, (0, 0), self.camera)
+        # desenhando os "corações" do heroi
         self.show_heart()
 
     def get_heart_image(self, x, y, width, height):
+        # definindo a image do coração
         self.spritesheet_heart = setup.GFX['heart']
         image = pg.Surface((width, height))
         rect = image.get_rect()
@@ -525,6 +574,7 @@ class Level1(tools._State):
         return image
 
     def show_heart(self):
+        # apresentando na tela quantos "corações" o heroi possui
         self.heart_image = self.get_heart_image(0, 0, 16, 16)
         self.heart_image.set_colorkey(c.BLACK)
         self.heart_rect = self.heart_image.get_rect()

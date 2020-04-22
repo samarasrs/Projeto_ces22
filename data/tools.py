@@ -73,6 +73,7 @@ class Control(object):
         self.som = gs.Sound(self.state)
 
     def setup_states(self, state_dict, start_state):
+        # pega o estado inicial
         self.state_dict = state_dict
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
