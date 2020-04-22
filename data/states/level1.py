@@ -294,8 +294,8 @@ class Level1(tools._State):
         self.check_callum_x_collisions()
         self.callum.rect.y += round(self.callum.vel.y)
         self.check_callum_y_collisions()
-        if self.callum.rect.left == 5:
-            self.callum.vel.x = 0
+        if self.callum.rect.left < 5:
+            self.callum.rect.left = 5
         if self.callum.rect.x < (self.camera.x + 5):
             self.callum.rect.x = (self.camera.x + 5)
 
