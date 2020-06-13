@@ -20,7 +20,9 @@ class Menu(tools._State):
                    c.EGG: False}
         self.startup(0.0, persist)
         self.keys = None
-        #self.som = gs.Sound()
+        self.som = gs.Sound(c.MAIN_MENU)
+        self.som.update()
+
 
     def startup(self, current_time, persist):
         self.next = c.LEVEL1

@@ -8,7 +8,7 @@ class Sound(object):
         self.sfx_dict = setup.SFX
         self.music_dict = setup.MUSIC
         self.state = status
-        self.set_music_mixer()
+        
         
 
     def set_music_mixer(self):
@@ -16,6 +16,15 @@ class Sound(object):
             pg.mixer.music.load(self.music_dict['menu'])
             pg.mixer.music.play(-1)
             #self.state = c.NORMAL
+        elif self.state == c.CASTLE:
+            pg.mixer.music.stop()
+            pg.mixer.music.load(self.music_dict['castle'])
+            pg.mixer.music.play(-1)
+        elif self.state == c.FOREST:
+            pg.mixer.music.stop()
+            pg.mixer.music.load(self.music_dict['forest'])
+            pg.mixer.music.play(-1)     
+            
         elif self.state == c.GAME_OVER:
             pg.mixer.music.load(self.music_dict['game_over'])
             pg.mixer.music.play()
@@ -25,7 +34,7 @@ class Sound(object):
         self.handle_state()
 
     def handle_state(self):
-        pass
+        self.set_music_mixer()
 
     def play_music(self):
         pass

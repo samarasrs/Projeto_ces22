@@ -30,7 +30,7 @@ SIZE_MULTIPLIER = 3
 
 # POWER
 
-SIZE_MULTIPLIER_POWER = 1
+SIZE_MULTIPLIER_POWER = 0.5
 POWER1 = 'poder1'
 POWER2 = 'poder2'
 FLYING = 'voando'
@@ -49,6 +49,7 @@ WALK = 'walk'
 JUMP = 'jump'
 FALL = 'fall'
 DEAD = 'dead'
+LIFES = 3
 
 
 # Fisica
@@ -138,6 +139,8 @@ LOAD_SCREEN = 'load screen'
 TIME_OUT = 'time out'
 GAME_OVER = 'game over'
 LEVEL1 = 'level1'
+FOREST = 'floresta'
+CASTLE = 'castelo'
 
 # telas do Menu
 TELA1 = 'Menu'
