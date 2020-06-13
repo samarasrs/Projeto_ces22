@@ -86,7 +86,7 @@ class Control(object):
             self.flip_state()
         # executa a função update do arquivo main_menu
         self.state.update(self.screen, self.keys, self.current_time)
-        self.som.update()
+        #self.som.update()
 
     def flip_state(self):
         previous, self.state_name = self.state_name, self.state.next

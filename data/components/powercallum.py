@@ -66,8 +66,8 @@ class Power1(pg.sprite.Sprite):
 
         image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
         image = pg.transform.scale(image,
-                                   (int(rect.width * 1), #verificar se necessita mudar o SIZE_MULTIPLIER (esta o mesmo do callum)
-                                    int(rect.height * 1)))
+                                   (int(rect.width * c.SIZE_MULTIPLIER_POWER), #verificar se necessita mudar o SIZE_MULTIPLIER (esta o mesmo do callum)
+                                    int(rect.height * c.SIZE_MULTIPLIER_POWER)))
         image = pg.transform.rotate(image, 90)
         return image  
 

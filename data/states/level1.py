@@ -3,6 +3,7 @@ import os
 from .. import setup, tools
 from .. import constants as c
 from ..components import obstaculo, callum2, witch, egg
+from .. import game_sound as gs
 
 
 
@@ -11,7 +12,9 @@ class Level1(tools._State):
     def __init__(self):
         # classe filha de State
         tools._State.__init__(self)
-
+        self.area_previous = c.MAIN_MENU
+        self.area = c.CASTLE
+        
 
     def startup(self, current_time, persist):
         # metodo que insere os dados iniciais no level
@@ -36,6 +39,8 @@ class Level1(tools._State):
 
         self.setup_spritegroups()
         self.setup_barraca()
+        self.som = gs.Sound(self.area)
+        self.som.update()
 
 # SETUPS
 
@@ -392,13 +397,21 @@ class Level1(tools._State):
                 self.callum.number_of_lifes -= 1
                 if self.callum.vel.x >= 0:
                     self.callum.rect.right -= 25
-                    self.callum.vel.x = - 5
-                    hit.dead = True
+                    self.callum.vel.x = - 20
+                    hit.dead = False
                 else:
                     self.callum.rect.left += 40
                     self.callum.vel.x = + 5
                 self.callum_damage_sound()
 
+    def check_power_collision(self):
+
+        for power in self.power1_group:
+            hits = pg.sprite.spritecollide(power,self.witch_group,False)
+            for hit in hits:
+                if hit:
+                    hit.dead = True
+      
     def callum_damage_sound(self):
         # definindo um som para a dano no heroi
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
@@ -440,6 +453,7 @@ class Level1(tools._State):
     def adjust_sprites_positions(self):
         # chama as funções para ajustar cada sprite na tela
         self.adjust_callum_position()
+        self.check_power_collision()
         self.check_witch_damage()
         self.check_witch_life()
         self.check_witch1_limits()
@@ -562,6 +576,22 @@ class Level1(tools._State):
             else:
                 power1.rect.centery = self.callum.rect.centery+15
                 power1.rect.right = (self.callum.rect.left+3)
+
+    def game_sound(self):
+        if (self.callum.rect.x > 0 and self.callum.rect.x< 4360):
+            if self.area != c.CASTLE:
+                self.area_previous = self.area
+                self.area = c.CASTLE
+                self.som.state = self.area
+                self.som.update()   
+        else:
+            if self.area != c.FOREST:
+                self.area_previous = self.area
+                self.area = c.FOREST
+                self.som.state = self.area
+                print("mudou para floresta!")
+                self.som.update()
+
 
 # BLIT
 
@@ -687,6 +717,7 @@ class Level1(tools._State):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
         self.update_all_sprites(keys)
         self.blit_tela(surface)
+        self.game_sound()
 
     def update_camera(self):
         third = self.camera.x + self.camera.w // 3
