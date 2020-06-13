@@ -34,6 +34,8 @@ class Game:
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
         self.spritesheet_player = Spritesheet(path.join(img_dir, CALLUM))
         self.spritesheet_heart = Spritesheet(path.join(img_dir, HEART))
+        self.spritesheet_egg = Spritesheet(path.join(img_dir, HEART))
+
 
 
 

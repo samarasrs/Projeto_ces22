@@ -2,7 +2,7 @@ import pygame as pg
 import os
 from .. import setup, tools
 from .. import constants as c
-from ..components import obstaculo, callum2, witch
+from ..components import obstaculo, callum2, witch, egg
 
 
 
@@ -29,10 +29,22 @@ class Level1(tools._State):
         self.setup_pedras()
         self.setup_callum()
         self.setup_witch()
+
+        self.setup_egg()
+
+
+
         self.setup_spritegroups()
         self.setup_barraca()
 
 # SETUPS
+
+
+    def setup_egg(self):
+        self.egg1 = egg.Egg(True)
+        self.egg1.rect.midbottom = (50,50)
+
+
     def setup_witch(self):
         # criando os objetos inimigos e atribuindo uma posição para eles
         self.witch1 = witch.Witch(True)
@@ -419,6 +431,10 @@ class Level1(tools._State):
         # criando um grupo para os poderes
         self.power1_group = pg.sprite.Group()
 
+        # Grupo para o sprite do ovo
+
+        self.egg_group = pg.sprite.Group()
+
 # AJUSTES
 
     def adjust_sprites_positions(self):
@@ -560,6 +576,46 @@ class Level1(tools._State):
         surface.blit(self.level, (0, 0), self.camera)
         # desenhando os "corações" do heroi
         self.show_heart()
+        self.show_egg()
+        self.show_power1()
+
+    def get_power1_image(self, x, y, width, height):
+        # definindo a image do coração
+        self.spritesheet_power1 = setup.GFX['poder1']
+        image = pg.Surface((width, height))
+        rect = image.get_rect()
+
+        image.blit(self.spritesheet_power1, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image,
+                                   (int(rect.width / 1.2),
+                                    int(rect.height / 1.2)))
+        return image
+
+    def show_power1(self):
+        # apresentando na tela quantos "poderes 1" o heroi possui
+        self.power1_image = self.get_power1_image(383, 211, 55, 32)
+        self.power1_image.set_colorkey(c.BLACK)
+        self.power1_rect = self.power1_image.get_rect()
+        self.power1_rect.x = 0
+        self.power1_rect.y = 105
+        setup.TELA.blit(self.power1_image, self.power1_rect)
+
+        if self.callum.power1_count > 1:
+
+            self.power1_image2 = self.get_power1_image(383, 211, 55, 32)
+            self.power1_image2.set_colorkey(c.BLACK)
+            self.power1_rect2 = self.heart_image2.get_rect()
+            self.power1_rect2.x = 49
+            self.power1_rect2.y = 105
+            setup.TELA.blit(self.power1_image2, self.power1_rect2)
+        if self.callum.power1_count > 2:
+            self.power1_image3 = self.get_power1_image(383, 211, 55, 32)
+            self.power1_image3.set_colorkey(c.BLACK)
+            self.power1_rect3 = self.power1_image3.get_rect()
+            self.power1_rect3.x = 98
+            self.power1_rect3.y = 105
+            setup.TELA.blit(self.power1_image3, self.power1_rect3)
+
 
     def get_heart_image(self, x, y, width, height):
         # definindo a image do coração
@@ -598,6 +654,33 @@ class Level1(tools._State):
             self.heart_rect3.y = 0
             setup.TELA.blit(self.heart_image3, self.heart_rect3)
 
+
+    def get_egg_image(self, x, y, width, height):
+        # definindo a image do coração
+        self.spritesheet_egg = setup.GFX['egg']
+        image = pg.Surface((width, height))
+        rect = image.get_rect()
+
+        image.blit(self.spritesheet_egg, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image,
+                                   (int(rect.width // 3),
+                                    int(rect.height // 3)))
+        return image
+    def show_egg(self):
+        # apresentando na tela quantos "corações" o heroi possui
+
+        self.egg_image = self.get_egg_image(68, 52, 120, 165)
+        self.egg_image.set_colorkey(c.BLACK)
+        self.egg_rect = self.egg_image.get_rect()
+        if self.callum.number_of_eggs > 0:
+            self.egg_rect.x = 0
+            self.egg_rect.y = 50
+        else:
+            self.egg_rect.midbottom = (300, 388)
+
+
+        setup.TELA.blit(self.egg_image, self.egg_rect)
+
 # UPDATES
 
     def update(self, surface, keys, current_time):
@@ -635,10 +718,17 @@ class Level1(tools._State):
         self.morcego3.update(self.game_info)
         self.morcego4.update(self.game_info)
 
+        self.egg1.update(self.game_info)
+
+        self.update_number_of_eggs()
+        self.show_egg()
+
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
-
+    def update_number_of_eggs(self):
+        if self.callum.rect.x > 240:
+            self.callum.number_of_eggs = 1
     def end_game(self):
         self.next = c.GAME_OVER
         if self.callum.die_timer == 150:

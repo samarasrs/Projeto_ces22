@@ -20,6 +20,9 @@ class Spritesheet:
             image = pg.transform.scale(image, (width * 3, height * 3))
         else:
             image = pg.transform.scale(image, (width, height // 3))
+        if width == 120:
+            if height == 165:
+                image = pg.transform.scale(image, (width // 10, height // 10))
 
         return image
 
@@ -76,6 +79,15 @@ class Player(pg.sprite.Sprite):
             self.heart_rect3.x = 98
             self.heart_rect3.y = 0
             self.game.screen.blit(self.heart_image3, self.heart_rect3)
+
+    def show_egg(self):
+        self.egg_image = self.game.spritesheet_egg.get_image(0, 0, 120, 165, True)
+        self.egg_image.set_colorkey(BLACK)
+        self.egg_rect = self.egg_rect.get_rect()
+        self.egg_rect.x = 20
+        self.egg_rect.y = 20
+        self.game.screen.blit(self.egg_image, self.egg_rect)
+
 
 
 

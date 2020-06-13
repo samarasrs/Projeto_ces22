@@ -8,6 +8,7 @@ HS_FILE = "highscore"
 SPRITESHEET = "spritesheet_jumper.png"
 CALLUM = "callum.png"
 HEART = "heart.png"
+EGG = "egg.png"
 
 # Player properties
 PLAYER_ACC = 0.8

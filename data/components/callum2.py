@@ -19,10 +19,13 @@ class Callum(pg.sprite.Sprite):
         self.setup_force()
         self.load_images()
         self.looking = c.RIGHT
-        self.number_of_lifes = 10
+        self.number_of_lifes = 3
         self.image = self.walking_normal_frames_r[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
+
+        #eggs
+        self.number_of_eggs = 0
 
         #poder
         self.allow_power1 = False
@@ -30,7 +33,7 @@ class Callum(pg.sprite.Sprite):
         self.last_power1_time = 0
         self.last_power2_time = 0
         self.imagepower1 = None
-        self.power1_count = 0
+        self.power1_count = 3
         self.power2_count = 0
 
 #SETUP
@@ -276,4 +279,6 @@ class Callum(pg.sprite.Sprite):
         for power in power1_group:
             power.update(game_info)
         self.handle_states(keys,power1_group)
+
+
 
