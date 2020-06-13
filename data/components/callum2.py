@@ -244,7 +244,7 @@ class Callum(pg.sprite.Sprite):
 
     def shoot_power1(self,power1_group):
         if(self.current_time - self.last_power1_time) > 200:
-            if self.power1_count <2:
+            if self.power1_count >0:
                 self.allow_power1 = False
                 power1_group.add(powercallum.Power1(self.looking))
                 self.last_power1_time = self.current_time
@@ -252,6 +252,10 @@ class Callum(pg.sprite.Sprite):
                     self.image = self.power_frame_r[0]
                 else:
                     self.image = self.power_frame_l[0]
+                self.power1_count -=1
+
+            
+
 
 # UPDATE
     
