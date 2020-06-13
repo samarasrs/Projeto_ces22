@@ -36,6 +36,9 @@ POWER2 = 'poder2'
 FLYING = 'voando'
 EXPLODING = 'explodindo'
 
+#EGG
+
+SIZE_EGG = 0.4
 
 
 #looking

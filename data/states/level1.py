@@ -47,7 +47,8 @@ class Level1(tools._State):
 
     def setup_egg(self):
         self.egg1 = egg.Egg(True)
-        self.egg1.rect.midbottom = (50,50)
+        self.egg1.rect.x = 1220
+        self.egg1.rect.y = 450
 
 
     def setup_witch(self):
@@ -368,7 +369,8 @@ class Level1(tools._State):
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = espinho.rect.top
                 if self.callum.die_timer == 0:
-                    self.callum_damage_sound()
+                    setup.SFX['pain'].play()
+                    #self.callum_damage_sound()
                 self.callum.star_death(self.game_info)
                 #self.callum.number_of_lifes -= 1
         if ground == None and plataforma == None and pedra == None:
@@ -398,11 +400,12 @@ class Level1(tools._State):
                 if self.callum.vel.x >= 0:
                     self.callum.rect.right -= 25
                     self.callum.vel.x = - 20
-                    hit.dead = False
+                    hit.dead = True
                 else:
                     self.callum.rect.left += 40
                     self.callum.vel.x = + 5
-                self.callum_damage_sound()
+                setup.SFX['pain'].play()
+                #self.callum_damage_sound()
 
     def check_power_collision(self):
 
@@ -446,7 +449,7 @@ class Level1(tools._State):
 
         # Grupo para o sprite do ovo
 
-        self.egg_group = pg.sprite.Group()
+        self.egg_group = pg.sprite.Group(self.egg1)
 
 # AJUSTES
 
@@ -591,6 +594,10 @@ class Level1(tools._State):
                 self.som.state = self.area
                 print("mudou para floresta!")
                 self.som.update()
+        if self.game_info[c.CALLUM_DEAD] == True:
+            self.som.stop_music()
+            #self.som_gameover = pg.mixer.Sound(os.path.join('resources', 'sound', 'game_over.wav'))
+            setup.SFX['game_over'].play()
 
 
 # BLIT
@@ -600,6 +607,9 @@ class Level1(tools._State):
         self.level.blit(self.background, self.camera, self.camera)
         # desenhando o heroi e os inimigos na tela
         self.callum_and_enemy_group.draw(self.level)
+        # desenhando o ovo na tela
+        if self.callum.number_of_eggs <1:
+            self.egg_group.draw(self.level)
         # desenhando o poder na tela
         self.power1_group.draw(self.level)
         #### ???????????
@@ -623,13 +633,14 @@ class Level1(tools._State):
 
     def show_power1(self):
         # apresentando na tela quantos "poderes 1" o heroi possui
-        self.power1_image = self.get_power1_image(383, 211, 55, 32)
-        self.power1_image.set_colorkey(c.BLACK)
-        self.power1_rect = self.power1_image.get_rect()
-        self.power1_rect.x = 0
-        self.power1_rect.y = 105
-        setup.TELA.blit(self.power1_image, self.power1_rect)
-
+        if self.callum.power1_count >0:
+            self.power1_image = self.get_power1_image(383, 211, 55, 32)
+            self.power1_image.set_colorkey(c.BLACK)
+            self.power1_rect = self.power1_image.get_rect()
+            self.power1_rect.x = 0
+            self.power1_rect.y = 105
+            setup.TELA.blit(self.power1_image, self.power1_rect)
+       
         if self.callum.power1_count > 1:
 
             self.power1_image2 = self.get_power1_image(383, 211, 55, 32)
@@ -661,12 +672,13 @@ class Level1(tools._State):
 
     def show_heart(self):
         # apresentando na tela quantos "corações" o heroi possui
-        self.heart_image = self.get_heart_image(0, 0, 16, 16)
-        self.heart_image.set_colorkey(c.BLACK)
-        self.heart_rect = self.heart_image.get_rect()
-        self.heart_rect.x = 0
-        self.heart_rect.y = 0
-        setup.TELA.blit(self.heart_image, self.heart_rect)
+        if self.callum.number_of_lifes > 0:
+            self.heart_image = self.get_heart_image(0, 0, 16, 16)
+            self.heart_image.set_colorkey(c.BLACK)
+            self.heart_rect = self.heart_image.get_rect()
+            self.heart_rect.x = 0
+            self.heart_rect.y = 0
+            setup.TELA.blit(self.heart_image, self.heart_rect)
 
         if self.callum.number_of_lifes > 1:
 
@@ -696,6 +708,7 @@ class Level1(tools._State):
                                    (int(rect.width // 3),
                                     int(rect.height // 3)))
         return image
+  
     def show_egg(self):
         # apresentando na tela quantos "corações" o heroi possui
 
@@ -705,11 +718,8 @@ class Level1(tools._State):
         if self.callum.number_of_eggs > 0:
             self.egg_rect.x = 0
             self.egg_rect.y = 50
-        else:
-            self.egg_rect.midbottom = (300, 388)
-
-
-        setup.TELA.blit(self.egg_image, self.egg_rect)
+            setup.TELA.blit(self.egg_image, self.egg_rect)
+        
 
 # UPDATES
 
@@ -752,14 +762,17 @@ class Level1(tools._State):
         self.egg1.update(self.game_info)
 
         self.update_number_of_eggs()
-        self.show_egg()
+        #self.show_egg()
 
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
+    
     def update_number_of_eggs(self):
-        if self.callum.rect.x > 240:
+        collider = pg.sprite.spritecollideany(self.callum, self.egg_group)
+        if (collider):
             self.callum.number_of_eggs = 1
+    
     def end_game(self):
         self.next = c.GAME_OVER
         if self.callum.die_timer == 150:

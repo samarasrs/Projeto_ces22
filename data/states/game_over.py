@@ -160,6 +160,8 @@ class Game_Over(tools._State):
                         self.done = True
                     elif self.cursor == c.BOTAO_NAO:
                         self.next = c.MAIN_MENU
+                        pg.mixer.music.load(setup.MUSIC['menu'])
+                        pg.mixer.music.play(-1)
                         self.done = True
                     self.cursor = c.BOTAO0
 

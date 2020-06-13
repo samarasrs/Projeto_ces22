@@ -7,7 +7,7 @@ vec = pg.math.Vector2
 class Egg(pg.sprite.Sprite):
     def __init__(self, is_witch):
         pg.sprite.Sprite.__init__(self)
-        self.sprite_sheet = setup.GFX['witch']
+        self.sprite_sheet = setup.GFX['egg']
 
         self.sprite_sheet_morcego = setup.GFX['morcego']
 
@@ -25,7 +25,8 @@ class Egg(pg.sprite.Sprite):
 
 
 
-        self.image = self.standing_frames[0]
+        self.image = self.get_image(68, 52, 120, 165)
+        self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
 
@@ -45,14 +46,11 @@ class Egg(pg.sprite.Sprite):
         # Pega imagem do arquivo filename
         image = pg.Surface((width, height))
         rect = image.get_rect()
-        if self.is_witch:
-            image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
-        else:
-            #print("morcego")
-            image.blit(self.sprite_sheet_morcego, (0, 0), (x, y, width, height))
+        image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
+        
         image = pg.transform.scale(image,
-                                   (int(rect.width * c.SIZE_MULTIPLIER),
-                                    int(rect.height * c.SIZE_MULTIPLIER)))
+                                   (int(rect.width *c.SIZE_EGG),
+                                    int(rect.height * c.SIZE_EGG)))
         return image
 
 
