@@ -23,8 +23,6 @@ class Witch(pg.sprite.Sprite):
         self.setup_force()
         self.load_images()
 
-
-
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
@@ -36,7 +34,6 @@ class Witch(pg.sprite.Sprite):
         self.max_x_vel = c.MAX_WALK_SPEED
         self.max_y_vel = c.MAX_Y_VEL
         self.x_accel = c.WALK_ACCEL
-
         self.gravity = c.GRAVITY
 
 # IMAGEM
@@ -54,6 +51,7 @@ class Witch(pg.sprite.Sprite):
                                    (int(rect.width * c.SIZE_MULTIPLIER),
                                     int(rect.height * c.SIZE_MULTIPLIER)))
         return image
+    
     def get_image_death(self, x, y, width, height):
         # Pega imagem do arquivo filename
         image = pg.Surface((width, height))
@@ -64,6 +62,7 @@ class Witch(pg.sprite.Sprite):
                                    (int(rect.width * c.SIZE_MULTIPLIER),
                                     int(rect.height * c.SIZE_MULTIPLIER)))
         return image
+
     def load_images(self):
 
         if self.is_witch:
@@ -92,10 +91,6 @@ class Witch(pg.sprite.Sprite):
             for frame in self.walking_normal_frames_r:
                 frame.set_colorkey(c.BLACK)
                 self.walking_normal_frames_l.append(pg.transform.flip(frame, True, False))
-
-
-
-
         self.dying_frames_r = [self.get_image_death(9, 15, 11, 9),
                                self.get_image_death(40, 14, 13, 11),
                                self.get_image_death(71, 11, 19, 17),
@@ -103,7 +98,6 @@ class Witch(pg.sprite.Sprite):
 
         for frame in self.dying_frames_r:
             frame.set_colorkey(c.BLACK)
-
 
 # ESTADOS
 
@@ -138,12 +132,9 @@ class Witch(pg.sprite.Sprite):
                     self.image = self.walking_normal_frames_l[self.current_frame]
                     self.walking_timer = self.current_time
 
-
-
 # UPDATE
 
     def update(self, game_info):
         self.current_time = game_info[c.CURRENT_TIME]
-        #self.handle_states(keys)
         self.walking()
 

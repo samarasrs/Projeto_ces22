@@ -156,7 +156,7 @@ def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi', '.flac')):
     return songs
 
 
-def load_all_sfx(directory, accept=('.wav', '.mpe', '.ogg', '.mdi', '.flac')):
+def load_all_sfx(directory, accept=('.wav', '.mpe', '.ogg', '.mdi')):
     effects = {}
     for fx in os.listdir(directory):
         name, ext = os.path.splitext(fx)

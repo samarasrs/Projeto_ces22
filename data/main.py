@@ -7,7 +7,6 @@ def main():
     # rodar_jogo vira um objeto da classe Control. É ele que vai controlar os estados do jogo
     rodar_jogo = tools.Control(setup.TITULO,c.MAIN_MENU)
     # criando o dicionario de estados.ele ditará em qual momento do jogo o jogo estará
-    ## temos que adicionar o WIN???
     dicionario_estados = {
         c.MAIN_MENU: main_menu.Menu(),
         c.LEVEL1: level1.Level1(),

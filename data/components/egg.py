@@ -5,40 +5,15 @@ from .. import constants as c
 vec = pg.math.Vector2
 
 class Egg(pg.sprite.Sprite):
-    def __init__(self, is_witch):
+    def __init__(self):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['egg']
-
-        self.sprite_sheet_morcego = setup.GFX['morcego']
-
-        self.state = c.STAND
-        self.state_ant = c.STAND
-        self.walking_timer = 0
-        self.jumping_timer = 0
         self.current_frame = 0
-        self.die_timer = 0
-        self.is_witch = is_witch
-        self.allow_jump = True
-        self.dead = False
-        self.setup_force()
         self.load_images()
-
-
-
         self.image = self.get_image(68, 52, 120, 165)
         self.image.set_colorkey(c.BLACK)
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
-
-#SETUP
-
-    def setup_force(self):
-        self.vel = vec(0, 0)
-        self.max_x_vel = c.MAX_WALK_SPEED
-        self.max_y_vel = c.MAX_Y_VEL
-        self.x_accel = c.WALK_ACCEL
-
-        self.gravity = c.GRAVITY
 
 # IMAGEM
 
@@ -53,168 +28,13 @@ class Egg(pg.sprite.Sprite):
                                     int(rect.height * c.SIZE_EGG)))
         return image
 
-
     def load_images(self):
-
-        if self.is_witch:
-            self.standing_frames = [self.get_image(68, 52, 120, 165)]
-            for frame in self.standing_frames:
-                frame.set_colorkey(c.BLACK)
-
-
-
-
-
-
-
-
-
-
-
-
-
+        self.standing_frames = [self.get_image(68, 52, 120, 165)]
+        for frame in self.standing_frames:
+            frame.set_colorkey(c.BLACK)
 
 # ESTADOS
 
-    def star_death(self):
-        self.dead = True
-        self.die()
-
-    def die(self):
-        self.image = self.standing_frames[0]
-
-        if (self.current_time - self.walking_timer >
-                50):
-            self.current_frame = (self.current_frame + 1) % len(self.dying_frames_r)
-            self.image = self.standing_frames[0]
-            self.walking_timer = self.current_time
-
-        self.die_timer += 1
-        self.vel.x = 0
-        if self.die_timer == 5:
-            self.kill()
-
-    def calculate_animation_speed(self):
-        if self.vel.x == 0:
-            animation_speed = 90
-        elif self.vel.x > 0:
-            animation_speed = 90 - (self.vel.x * (9))
-        else:
-            animation_speed = 90 - (self.vel.x * (9) * -1)
-        return animation_speed
-
-    def walking(self):
-        if self.dead == False:
-            if self.vel.x >= 0:
-                if (self.current_time - self.walking_timer >
-                        250):
-                    self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
-                    self.image = self.standing_frames[0]
-                    self.walking_timer = self.current_time
-            if self.vel.x < 0:
-                if (self.current_time - self.walking_timer >
-                        250):
-                    self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
-                    self.image = self.standing_frames[0]
-                    self.walking_timer = self.current_time
-
-
-        """if keys[tools.keybinding['jump']]:
-            if self.allow_jump:
-                self.state = c.JUMP
-                self.current_frame = 0
-                self.state_ant = c.WALK
-                if self.vel.x > 4.5 or self.vel.x < -4.5:
-                    self.vel.y = c.JUMP_VEL - .5
-                else:
-                    self.vel.y = c.JUMP_VEL"""
-
-
-        """if keys[tools.keybinding['left']]:
-            self.image = self.walking_normal_frames_l[self.current_frame]
-            if abs(self.vel.x) < self.max_x_vel:
-                self.vel.x -= self.x_accel
-                if self.vel.x > -0.5:
-                    self.vel.x= -0.5
-            elif abs(self.vel.x) > self.max_x_vel:
-                self.vel.x += self.x_accel
-
-        elif keys[tools.keybinding['right']]:
-            self.image = self.walking_normal_frames_r[self.current_frame]
-            if self.vel.x < self.max_x_vel:
-                self.vel.x += self.x_accel
-                if self.vel.x < 0.5:
-                    self.vel.x= 0.5
-            elif abs(self.vel.x) > self.max_x_vel:
-                self.vel.x -= self.x_accel
-
-        else:
-            if self.vel.x > 0:
-                self.image = self.walking_normal_frames_r[self.current_frame]
-                self.vel.x -= self.x_accel
-
-            else:
-                self.vel.x = 0
-                self.state = c.STAND
-                self.state_ant = c.WALK
-
-            if self.vel.x < 0:
-                self.image = self.walking_normal_frames_l[self.current_frame]
-                self.vel.x += self.x_accel
-
-
-            else:
-                self.vel.x = 0
-                self.state = c.STAND
-                self.state_ant = c.WALK  """
-
-    """def standing(self, keys):
-        #self.check_to_allow_jump(keys)
-        self.image = self.standing_frames[0]
-        self.vel = vec(0, 0)
-
-        if keys[tools.keybinding['left']] or keys[tools.keybinding['right']]:
-            self.state = c.WALK
-            self.state_ant = c.STAND
-        elif keys[tools.keybinding['jump']]:
-            if self.allow_jump:
-                self.state = c.JUMP
-                self.current_frame = 0
-                self.state_ant = c.STAND
-                self.vel.y = c.JUMP_VEL
-        else:
-            self.state = c.STAND
-
-    def falling(self, keys):
-        if self.vel.y < c.MAX_Y_VEL:
-            self.vel.y += self.gravity
-
-        if keys[tools.keybinding['left']]:
-            if self.vel.x > (self.max_x_vel * - 1):
-                self.vel.x -= self.x_accel
-
-        elif keys[tools.keybinding['right']]:
-            if self.vel.x < self.max_x_vel:
-                self.vel.x += self.x_accel """
-
-    """def die(self):
-        if self.vel.x >= 0:
-            self.image = self.dying_frames_r[0]
-        else:
-            self.image = self.dying_frames_l[0]
-        self.vel.x = 0"""
-
-
-    """def star_death(self, game_info):
-        self.dead = True
-        game_info[c.CALLUM_DEAD] = True
-        self.die()"""
-
-
-# UPDATE
-
     def update(self, game_info):
         self.current_time = game_info[c.CURRENT_TIME]
-        #self.handle_states(keys)
-        self.walking()
 
