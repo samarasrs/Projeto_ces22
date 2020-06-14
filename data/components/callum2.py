@@ -221,9 +221,8 @@ class Callum(pg.sprite.Sprite):
                 self.shoot_power1(power1_group)
 
     def die(self):
-        if self.vel.x >= 0:
-                self.image = self.dying_frames_r[0]
-                self.die_timer += 1
+        self.image = self.dying_frames_r[0]
+        self.die_timer += 1
         self.vel.x = 0
 
     def star_death(self, game_info):
@@ -243,6 +242,7 @@ class Callum(pg.sprite.Sprite):
 #SHOOTS
 
     def shoot_power1(self,power1_group):
+        setup.SFX['power'].play()
         if(self.current_time - self.last_power1_time) > 200:
             if self.power1_count >0:
                 self.allow_power1 = False
@@ -253,9 +253,6 @@ class Callum(pg.sprite.Sprite):
                 else:
                     self.image = self.power_frame_l[0]
                 self.power1_count -=1
-
-            
-
 
 # UPDATE
     

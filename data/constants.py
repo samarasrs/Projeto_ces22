@@ -95,6 +95,8 @@ POS_TEXT_BOTAO_PERM2 = [42, 318]
 POS_TEXT_BOTAO_PERM1_TELA1 = [247, 175]
 POS_TEXT_BOTAO_PERM2_TELA1 = [247, 188]
 POS_TEXT_GAME_OVER = [190, 150]
+POS_TEXT_VITORIA = [50, 150]
+POS_TEXT_ESQUECEU = [150,100]
 POS_TEXT_DESEJA = [220, 250]
 POS_TEXT_SIM = [285, 405]
 POS_TEXT_NAO = [465, 405]
@@ -113,6 +115,8 @@ TEXT_BOTAO_VOLTAR = 'Voltar'
 TEXT_BOTAO_PERM1 = 'Permanecer'
 TEXT_BOTAO_PERM2 = 'nesta tela'
 TEXT_GAME_OVER = 'GAME OVER'
+TEXT_VITORIA = 'Fase concluída com sucesso'
+TEXT_ESQUECEU= 'Você esqueceu o OVO'
 TEXT_DESEJA = 'Deseja jogar novamente?'
 TEXT_SIM = 'SIM'
 TEXT_NAO = 'NÃO'
@@ -144,6 +148,8 @@ GAME_OVER = 'game over'
 LEVEL1 = 'level1'
 FOREST = 'floresta'
 CASTLE = 'castelo'
+VITORIA = 'vitoria'
+ESQUECEU = 'esqueceu'
 
 # telas do Menu
 TELA1 = 'Menu'

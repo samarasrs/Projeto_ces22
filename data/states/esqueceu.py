@@ -1,11 +1,10 @@
-
 import pygame as pg
 from .. import setup, tools
 from .. import constants as c
 from .. import game_sound as gs
 
 
-class Game_Over(tools._State):
+class Esqueceu(tools._State):
     def __init__(self):
         tools._State.__init__(self)
         persist = {c.SCORE: 0,
@@ -42,7 +41,6 @@ class Game_Over(tools._State):
         self.text_sim = self.setup_texto_botao(c.TEXT_SIM, c.FONT_BOTOES_TAMANHO)
         self.text_nao = self.setup_texto_botao(c.TEXT_NAO, c.FONT_BOTOES_TAMANHO)
 
-
     # configura os botoes no seu estado deselecionados (amarelos)
     def setup_botao(self):
         self.botao = pg.transform.scale(setup.GFX['button_amarelo2'], c.BOTOES_TAMANHO)
@@ -72,11 +70,12 @@ class Game_Over(tools._State):
         self.imagem.set_alpha(130)
         self.imagem.fill(c.GRAY)
 
+        self.text_esqueceu = self.w_text(c.TEXT_ESQUECEU, c.BLACK,
+                                        pg.font.Font(setup.FONTS[c.FONT_BOTOES], 50))
         self.text_game_over = self.w_text(c.TEXT_GAME_OVER, c.BLACK,
-                                        pg.font.Font(setup.FONTS[c.FONT_BOTOES], 80))
+                                          pg.font.Font(setup.FONTS[c.FONT_BOTOES], 80))
         self.text_deseja = self.w_text(c.TEXT_DESEJA, c.BLACK,
                                           pg.font.Font(setup.FONTS[c.FONT_BOTOES], c.FONT_BOTOES_TAMANHO))
-
 
     # define a posição default do cursor e qual tela aparece primeiro
     def setup_cursor(self):
@@ -138,6 +137,7 @@ class Game_Over(tools._State):
         surface.blit(self.botao_sim, c.POS_BOTAO_SIM)
         surface.blit(self.botao_nao, c.POS_BOTAO_NAO)
         surface.blit(self.botao_perm2, c.POS_BOTAO_PERM2)
+        surface.blit(self.text_esqueceu, c.POS_TEXT_ESQUECEU)
         surface.blit(self.text_game_over, c.POS_TEXT_GAME_OVER)
         surface.blit(self.text_deseja, c.POS_TEXT_DESEJA)
         surface.blit(self.text_sim, c.POS_TEXT_SIM)
@@ -163,19 +163,7 @@ class Game_Over(tools._State):
                         self.done = True
                     self.cursor = c.BOTAO0
 
-
-
     #atualiza as informações
     def update(self, surface, keys, current_time):
         self.current_time = current_time
         self.tela(surface, keys)
-
-
-
-
-
-
-
-
-
-

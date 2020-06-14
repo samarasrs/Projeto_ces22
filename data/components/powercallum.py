@@ -24,9 +24,7 @@ class Power1(pg.sprite.Sprite):
         #self.rect.right = x
         #self.rect.y = y
         self.name = c.POWER1
-        
-        
-        
+
     def setup_frames(self):
         #criar os frames da direita
         self.frames_r = []

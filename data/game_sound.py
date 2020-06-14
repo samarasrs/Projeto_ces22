@@ -23,8 +23,11 @@ class Sound(object):
         elif self.state == c.FOREST:
             pg.mixer.music.stop()
             pg.mixer.music.load(self.music_dict['forest'])
-            pg.mixer.music.play(-1)     
-            
+            pg.mixer.music.play(-1)
+        elif self.state == c.VITORIA:
+            pg.mixer.music.stop()
+            pg.mixer.music.load(self.music_dict['win'])
+            pg.mixer.music.play(-1)
         elif self.state == c.GAME_OVER:
             pg.mixer.music.load(self.music_dict['game_over'])
             pg.mixer.music.play()

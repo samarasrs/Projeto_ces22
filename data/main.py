@@ -1,5 +1,5 @@
 from . import setup, tools
-from .states import main_menu, level1, game_over
+from .states import main_menu, level1, game_over, vc_venceu, esqueceu
 from . import constants as c
 
 
@@ -11,7 +11,9 @@ def main():
     dicionario_estados = {
         c.MAIN_MENU: main_menu.Menu(),
         c.LEVEL1: level1.Level1(),
-        c.GAME_OVER: game_over.Game_Over()
+        c.GAME_OVER: game_over.Game_Over(),
+        c.VITORIA: vc_venceu.Vencer(),
+        c.ESQUECEU: esqueceu.Esqueceu()
         }
     # atribui o MAIN_MENU como início do jogo
     rodar_jogo.setup_states(dicionario_estados, c.MAIN_MENU)

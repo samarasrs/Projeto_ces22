@@ -15,8 +15,6 @@ class Menu(tools._State):
                    c.LEVEL_STATE: None,
                    c.CAMERA_INICIAL_X: 0,
                    c.DEAD: False,
-                   c.PODER_1: 5,
-                   c.PODER_2: 0,
                    c.EGG: False}
         self.startup(0.0, persist)
         self.keys = None
@@ -89,9 +87,34 @@ class Menu(tools._State):
         # Titulo tela 2
         self.text_tela2 = self.w_text(c.TEXT_TELA2, c.BLACK,
                                       pg.font.Font(setup.FONTS[c.FONT_TITULO], c.FONT_TITULO_TAMANHO))
+
+        self.up = pg.transform.scale(setup.GFX['up'], (50, 50))
+        self.right = pg.transform.scale(setup.GFX['right'], (50, 50))
+        self.left = pg.transform.scale(setup.GFX['left'], (50, 50))
+        self.teclaS = pg.transform.scale(setup.GFX['S'], (50, 50))
+        self.text_tela2_1 = self.w_text("- Objetivo: ", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_2 = self.w_text("Leve o Ovo do Principe Dragão até um lugar seguro.", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_3 = self.w_text("- Teclas utilizadas", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_4 = self.w_text("andar para esquerda", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_5 = self.w_text("andar para direita", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_6 = self.w_text("pular", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela2_7 = self.w_text("atacar", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+
         # Titulo tela 3
+
         self.text_tela3 = self.w_text(c.TEXT_TELA3, c.BLACK,
                                       pg.font.Font(setup.FONTS[c.FONT_TITULO], c.FONT_TITULO_TAMANHO))
+        self.text_tela3_1 = self.w_text("- Sprite sheets: ", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 25))
+        self.text_tela3_2 = self.w_text("https://bakudas.itch.io ", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela3_3 = self.w_text("https://opengameart.org", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela3_4 = self.w_text("Obs: Mapa montado pela equipe.", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela3_5 = self.w_text("- Músicas e efeitos sonoros: ", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 25))
+        self.text_tela3_6 = self.w_text("https://opengameart.org", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+        self.text_tela3_7 = self.w_text("- Criadores: ", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 25))
+        self.text_tela3_8 = self.w_text("Carlos Figueiredo, Matheus Martins e Samara Ribeiro", c.BLACK, pg.font.Font(setup.FONTS['JMH_Typewriter'], 22))
+
+
+
 
     # define a posição default do cursor e qual tela aparece primeiro
     def setup_cursor(self):
@@ -215,6 +238,18 @@ class Menu(tools._State):
         surface.blit(self.botao_perm, c.POS_BOTAO_PERM)
         surface.blit(self.text_tela2, c.POS_TEXT_TIT_TELA2)
         surface.blit(self.text_voltar, c.POS_TEXT_VOLTAR)
+        surface.blit(self.text_tela2_1, [30, 130])
+        surface.blit(self.text_tela2_2, [90, 160])
+        surface.blit(self.text_tela2_3, [30, 200])
+        surface.blit(self.text_tela2_4, [150, 240])
+        surface.blit(self.text_tela2_5, [460, 240])
+        surface.blit(self.text_tela2_6, [150, 300])
+        surface.blit(self.text_tela2_7, [460, 300])
+        surface.blit(self.left, [90, 230])
+        surface.blit(self.right, [400, 230])
+        surface.blit(self.up, [90, 290])
+        surface.blit(self.teclaS, [400, 290])
+
 
     # Apresenta as imagens e textos da tela Creditos
     def blit_tela3(self, surface):
@@ -224,6 +259,17 @@ class Menu(tools._State):
         surface.blit(self.botao_perm, c.POS_BOTAO_PERM)
         surface.blit(self.text_tela3, c.POS_TEXT_TIT_TELA3)
         surface.blit(self.text_voltar, c.POS_TEXT_VOLTAR)
+        surface.blit(self.text_tela3_1, [30, 240])
+        surface.blit(self.text_tela3_2, [90, 270])
+        surface.blit(self.text_tela3_3, [90, 300])
+        surface.blit(self.text_tela3_4, [90, 330])
+        surface.blit(self.text_tela3_5, [30, 390])
+        surface.blit(self.text_tela3_6, [90, 420])
+        surface.blit(self.text_tela3_7, [30, 150])
+        surface.blit(self.text_tela3_8, [90, 180])
+
+
+
 
     # Controla a tela Menu
     def tela1(self, surface, keys):

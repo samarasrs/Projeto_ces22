@@ -147,7 +147,7 @@ def load_all_fonts(directory, accept='.ttf'):
     return fonts
 
 
-def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
+def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi', '.flac')):
     songs = {}
     for song in os.listdir(directory):
         name, ext = os.path.splitext(song)
@@ -156,7 +156,7 @@ def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
     return songs
 
 
-def load_all_sfx(directory, accept=('.wav', '.mpe', '.ogg', '.mdi')):
+def load_all_sfx(directory, accept=('.wav', '.mpe', '.ogg', '.mdi', '.flac')):
     effects = {}
     for fx in os.listdir(directory):
         name, ext = os.path.splitext(fx)

@@ -6,7 +6,6 @@ from ..components import obstaculo, callum2, witch, egg
 from .. import game_sound as gs
 
 
-
 class Level1(tools._State):
     # classe do level 1
     def __init__(self):
@@ -14,7 +13,6 @@ class Level1(tools._State):
         tools._State.__init__(self)
         self.area_previous = c.MAIN_MENU
         self.area = c.CASTLE
-        
 
     def startup(self, current_time, persist):
         # metodo que insere os dados iniciais no level
@@ -25,56 +23,71 @@ class Level1(tools._State):
         self.setup_ground()
         self.setup_teto()
         self.setup_agua()
-        self.setup_gaiola()
         self.setup_espinhos()
         self.setup_espinhos()
         self.setup_plataformas()
         self.setup_pedras()
         self.setup_callum()
         self.setup_witch()
-
         self.setup_egg()
-
-
-
         self.setup_spritegroups()
         self.setup_barraca()
         self.som = gs.Sound(self.area)
         self.som.update()
 
-# SETUPS
-
+    # SETUPS
 
     def setup_egg(self):
         self.egg1 = egg.Egg(True)
-        self.egg1.rect.x = 1220
-        self.egg1.rect.y = 450
-
+        self.egg1.rect.x = 1180
+        self.egg1.rect.y = 460
 
     def setup_witch(self):
         # criando os objetos inimigos e atribuindo uma posição para eles
+        self.lista_witchs = []
         self.witch1 = witch.Witch(True)
         self.witch1.rect.midbottom = (742, 283)
+        self.lista_witchs.append(self.witch1)
+
         self.witch2 = witch.Witch(True)
         self.witch2.rect.midbottom = (334, 388)
+        self.lista_witchs.append(self.witch2)
+
         self.witch3 = witch.Witch(True)
         self.witch3.rect.midbottom = (1525, 143)
+        self.lista_witchs.append(self.witch3)
+
         self.witch4 = witch.Witch(True)
         self.witch4.rect.midbottom = (1375, 496)
+        self.lista_witchs.append(self.witch4)
+
         self.witch5 = witch.Witch(True)
         self.witch5.rect.midbottom = (2596, 528)
+        self.lista_witchs.append(self.witch5)
+
         self.witch6 = witch.Witch(True)
         self.witch6.rect.midbottom = (4654, 319)
+        self.lista_witchs.append(self.witch6)
+
         self.witch7 = witch.Witch(True)
         self.witch7.rect.midbottom = (8540, 324)
+        self.lista_witchs.append(self.witch7)
+
         self.morcego1 = witch.Witch(False)
         self.morcego1.rect.midbottom = (3970, 500)
+        self.lista_witchs.append(self.morcego1)
+
         self.morcego2 = witch.Witch(False)
         self.morcego2.rect.midbottom = (5310, 400)
+        self.lista_witchs.append(self.morcego2)
+
         self.morcego3 = witch.Witch(False)
         self.morcego3.rect.midbottom = (6880, 380)
+        self.lista_witchs.append(self.morcego3)
+
         self.morcego4 = witch.Witch(False)
         self.morcego4.rect.midbottom = (7300, 300)
+        self.lista_witchs.append(self.morcego4)
 
     def setup_callum(self):
         # criando o heroi e posicionando ele na tela
@@ -170,13 +183,6 @@ class Level1(tools._State):
         # atribuindo os objetos no mesmo grupo
         self.group_agua = pg.sprite.Group(agua_rect1, agua_rect2, agua_rect3, agua_rect4)
 
-    #### estamos utilizando a gaiola????
-    def setup_gaiola(self):
-        #
-        gaiola_rect1 = obstaculo.Obstaculo(1434, 334, 51, 86)
-
-        self.group_gaiola = pg.sprite.Group(gaiola_rect1)
-
     def setup_espinhos(self):
         # definindo os objetos espinhos e onde estão posicionados
         espinho_rect1 = obstaculo.Obstaculo(350, 421, 144, 179)
@@ -190,14 +196,14 @@ class Level1(tools._State):
     def setup_plataformas(self):
         # definindo os objetos plataforma e onde estão posicionados
         plataforma_rect1 = obstaculo.Obstaculo(1654, 389, 110, 37)
-        plataforma_rect2= obstaculo.Obstaculo(2905, 381, 110, 37)
+        plataforma_rect2 = obstaculo.Obstaculo(2905, 381, 110, 37)
         plataforma_rect3 = obstaculo.Obstaculo(3076, 274, 110, 37)
         plataforma_rect4 = obstaculo.Obstaculo(3258, 486, 110, 37)
         plataforma_rect5 = obstaculo.Obstaculo(5443, 222, 185, 69)
         plataforma_rect6 = obstaculo.Obstaculo(5713, 102, 181, 71)
         plataforma_rect7 = obstaculo.Obstaculo(5943, 265, 186, 75)
 
-        #atribuindo os objetos no mesmo grupo
+        # atribuindo os objetos no mesmo grupo
         self.group_plataforma = pg.sprite.Group(plataforma_rect1, plataforma_rect2, plataforma_rect3, plataforma_rect4,
                                                 plataforma_rect5, plataforma_rect6, plataforma_rect7)
 
@@ -223,102 +229,16 @@ class Level1(tools._State):
         # criando um grupo para ela
         self.group_barraca = pg.sprite.Group(barraca_rect)
 
-    '''def tela_fim_do_level(self):
-        self.imagem = pg.Surface((c.TELA_LARGURA, c.TELA_ALTURA))
-        self.imagem.set_alpha(130)
-        self.imagem.fill(c.GRAY)'''
+    # CHECKS
 
-# CHECKS
+    def check_enemies_limits(self, enemie, inf, sup):
+        if enemie.rect.left <= inf:
+            enemie.vel.x = enemie.vel.x * (-1)
+        if enemie.rect.right >= sup:
+            enemie.vel.x = enemie.vel.x * (-1)
 
-    ### todos os checks dos inimigos são bem parecidos, não daria para criar uma única função?
-    def check_witch1_limits(self):
-        if self.witch1.rect.left <= 590:
-            self.witch1.vel.x = self.witch1.vel.x * (-1)
-        if self.witch1.rect.right >= 790:
-            self.witch1.vel.x = self.witch1.vel.x * (-1)
+        self.adjust_enimies_position(enemie)
 
-        self.adjust_witch1_position()
-
-    def check_witch2_limits(self):
-        if self.witch2.rect.left <= 150:
-            self.witch2.vel.x = self.witch2.vel.x * (-1)
-        if self.witch2.rect.right >= 380:
-            self.witch2.vel.x = self.witch2.vel.x * (-1)
-
-        self.adjust_witch2_position()
-
-    def check_witch3_limits(self):
-        if self.witch3.rect.left <= 1200:
-            self.witch3.vel.x = self.witch3.vel.x * (-1)
-        if self.witch3.rect.right >= 1600:
-            self.witch3.vel.x = self.witch3.vel.x * (-1)
-
-        self.adjust_witch3_position()
-    
-    def check_witch4_limits(self):
-        if self.witch4.rect.left <= 1280:
-            self.witch4.vel.x = self.witch4.vel.x * (-1)
-        if self.witch4.rect.right >= 1450:
-            self.witch4.vel.x = self.witch4.vel.x * (-1)
-
-        self.adjust_witch4_position()
-    
-    def check_witch5_limits(self):
-        if self.witch5.rect.left <= 2250:
-            self.witch5.vel.x = self.witch5.vel.x * (-1)
-        if self.witch5.rect.right >= 2695:
-            self.witch5.vel.x = self.witch5.vel.x * (-1)
-
-        self.adjust_witch5_position()
-    
-    def check_witch6_limits(self):
-        if self.witch6.rect.left <= 4440:
-            self.witch6.vel.x = self.witch6.vel.x * (-1)
-        if self.witch6.rect.right >= 4750:
-            self.witch6.vel.x = self.witch6.vel.x * (-1)
-
-        self.adjust_witch6_position()
-    
-    def check_witch7_limits(self):
-        if self.witch7.rect.left <= 8100:
-            self.witch7.vel.x = self.witch7.vel.x * (-1)
-        if self.witch7.rect.right >= 8590:
-            self.witch7.vel.x = self.witch7.vel.x * (-1)
-
-        self.adjust_witch7_position()
-   
-    def check_morcego1_limits(self):
-        if self.morcego1.rect.left <= 3700:
-            self.morcego1.vel.x = self.morcego1.vel.x * (-1)
-        if self.morcego1.rect.right >= 4050:
-            self.morcego1.vel.x = self.morcego1.vel.x * (-1)
-
-        self.adjust_morcego1_position()
-    
-    def check_morcego2_limits(self):
-        if self.morcego2.rect.left <= 5200:
-            self.morcego2.vel.x = self.morcego2.vel.x * (-1)
-        if self.morcego2.rect.right >= 5340:
-            self.morcego2.vel.x = self.morcego2.vel.x * (-1)
-
-        self.adjust_morcego2_position()
-
-    def check_morcego3_limits(self):
-        if self.morcego3.rect.left <= 6800:
-            self.morcego3.vel.x = self.morcego3.vel.x * (-1)
-        if self.morcego1.rect.right >= 6930:
-            self.morcego3.vel.x = self.morcego3.vel.x * (-1)
-
-        self.adjust_morcego3_position()
-
-    def check_morcego4_limits(self):
-        if self.morcego4.rect.left <= 7110:
-            self.morcego4.vel.x = self.morcego4.vel.x * (-1)
-        if self.morcego4.rect.right >= 7350:
-            self.morcego4.vel.x = self.morcego4.vel.x * (-1)
-
-        self.adjust_morcego4_position()
-    
     def check_callum_x_collisions(self):
         # checando as colisões do heroi no eixo x
         # fazendo a verificação se o heroi colide com algum dos objetos abaixo
@@ -345,7 +265,7 @@ class Level1(tools._State):
         plataforma = pg.sprite.spritecollideany(self.callum, self.group_plataforma)
         teto = pg.sprite.spritecollideany(self.callum, self.group_teto)
         agua = pg.sprite.spritecollideany(self.callum, self.group_agua)
-        espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
+        self.espinho = pg.sprite.spritecollideany(self.callum, self.group_espinho)
         pedra = pg.sprite.spritecollideany(self.callum, self.group_pedra)
 
         # se houver colisão com objetos que não matam, chama a função para ajustar posição
@@ -359,22 +279,25 @@ class Level1(tools._State):
         elif pedra:
             self.adjust_callum_position_for_y_collision_ground(pedra)
         elif agua:
-            if agua.rect.bottom > self.callum.rect.bottom:
+            if agua.rect.top < self.callum.rect.bottom:
                 self.callum.vel.y = 0
                 self.callum.rect.bottom = agua.rect.top
-                self.callum.star_death(self.game_info)
-                #self.callum.number_of_lifes -= 1
-        elif espinho:
-            if espinho.rect.bottom > self.callum.rect.bottom:
-                self.callum.vel.y = 0
-                self.callum.rect.bottom = espinho.rect.top
                 if self.callum.die_timer == 0:
                     setup.SFX['pain'].play()
-                    #self.callum_damage_sound()
                 self.callum.star_death(self.game_info)
-                #self.callum.number_of_lifes -= 1
+        elif self.espinho:
+            if self.espinho.rect.bottom > self.callum.rect.bottom:
+                self.callum.vel.y = 0
+                self.callum.rect.bottom = self.espinho.rect.top
+                if self.callum.die_timer == 0:
+                    setup.SFX['pain'].play()
+                    # self.callum_damage_sound()
+                self.callum.star_death(self.game_info)
+            elif self.espinho.rect.bottom > self.callum.rect.top:
+                self.adjust_callum_position_for_y_collision_teto(self.espinho)
+                # self.callum.number_of_lifes -= 1
         if ground == None and plataforma == None and pedra == None:
-            if self.callum.state != c.JUMP and self.callum.state != c.DEAD :
+            if self.callum.state != c.JUMP and self.callum.state != c.DEAD:
                 self.callum.state = c.FALL
 
     def check_callum_dead(self):
@@ -389,9 +312,8 @@ class Level1(tools._State):
             self.callum.star_death(self.game_info)
             self.end_game()
 
-    #### essa função nao poderia ser mesclada com check_callum_x_collisions?? talvez conserte o bug do game over
     def check_witch_damage(self):
-        # verificando se o heroi toma dano dos herois
+        # verificando se o heroi toma dano das bruxas
         hits = pg.sprite.spritecollide(self.callum, self.witch_group, False)
 
         for hit in hits:
@@ -404,17 +326,19 @@ class Level1(tools._State):
                 else:
                     self.callum.rect.left += 40
                     self.callum.vel.x = + 5
+                    hit.dead = True
                 setup.SFX['pain'].play()
-                #self.callum_damage_sound()
+
+                # self.callum_damage_sound()
 
     def check_power_collision(self):
 
         for power in self.power1_group:
-            hits = pg.sprite.spritecollide(power,self.witch_group,False)
+            hits = pg.sprite.spritecollide(power, self.witch_group, False)
             for hit in hits:
                 if hit:
                     hit.dead = True
-      
+
     def callum_damage_sound(self):
         # definindo um som para a dano no heroi
         self.pain = pg.mixer.Sound(os.path.join('resources', 'music', 'pain.wav'))
@@ -451,7 +375,7 @@ class Level1(tools._State):
 
         self.egg_group = pg.sprite.Group(self.egg1)
 
-# AJUSTES
+    # AJUSTES
 
     def adjust_sprites_positions(self):
         # chama as funções para ajustar cada sprite na tela
@@ -459,71 +383,28 @@ class Level1(tools._State):
         self.check_power_collision()
         self.check_witch_damage()
         self.check_witch_life()
-        self.check_witch1_limits()
-        self.check_witch2_limits()
-        self.check_witch3_limits()
-        self.check_witch4_limits()
-        self.check_witch5_limits()
-        self.check_witch6_limits()
-        self.check_witch7_limits()
-        self.check_morcego1_limits()
-        self.check_morcego2_limits()
-        self.check_morcego3_limits()
-        self.check_morcego4_limits()
+
+        self.check_enemies_limits(self.witch1, 590, 790)
+        self.check_enemies_limits(self.witch2, 150, 380)
+        self.check_enemies_limits(self.witch3, 1200, 1600)
+        self.check_enemies_limits(self.witch4, 1280, 1450)
+        self.check_enemies_limits(self.witch5, 2250, 2695)
+        self.check_enemies_limits(self.witch6, 4440, 4750)
+        self.check_enemies_limits(self.witch7, 8100, 8590)
+
+        self.check_enemies_limits(self.morcego1, 3700, 4050)
+        self.check_enemies_limits(self.morcego2, 5200, 5340)
+        self.check_enemies_limits(self.morcego3, 6800, 6930)
+        self.check_enemies_limits(self.morcego4, 7110, 7350)
+
+
         for power in self.power1_group:
             self.adjust_power1_position(power)
 
-    ### poderia ser feito uma função para ajustar todos os inimigos
-    def adjust_witch1_position(self):
-        self.last_x_position = self.witch1.rect.right
-        self.witch1.rect.x += round(self.witch1.vel.x)
-        self.witch1.rect.y += round(self.witch1.vel.y)
-
-    def adjust_witch2_position(self):
-        self.last_x_position = self.witch2.rect.right
-        self.witch2.rect.x += round(self.witch2.vel.x)
-        self.witch2.rect.y += round(self.witch2.vel.y)
-
-    def adjust_witch3_position(self):
-        self.last_x_position = self.witch3.rect.right
-        self.witch3.rect.x += round(self.witch3.vel.x)
-        self.witch3.rect.y += round(self.witch3.vel.y)
-
-    def adjust_witch4_position(self):
-        self.last_x_position = self.witch4.rect.right
-        self.witch4.rect.x += round(self.witch4.vel.x)
-        self.witch4.rect.y += round(self.witch4.vel.y)
-
-    def adjust_witch5_position(self):
-        self.last_x_position = self.witch5.rect.right
-        self.witch5.rect.x += round(self.witch5.vel.x)
-        self.witch5.rect.y += round(self.witch5.vel.y)
-
-    def adjust_witch6_position(self):
-        self.last_x_position = self.witch6.rect.right
-        self.witch6.rect.x += round(self.witch6.vel.x)
-        self.witch6.rect.y += round(self.witch6.vel.y)
-
-    def adjust_witch7_position(self):
-        self.last_x_position = self.witch7.rect.right
-        self.witch7.rect.x += round(self.witch7.vel.x)
-        self.witch7.rect.y += round(self.witch7.vel.y)
-
-    def adjust_morcego1_position(self):
-        self.last_x_position = self.morcego1.rect.right
-        self.morcego1.rect.x += round(self.morcego1.vel.x)
-
-    def adjust_morcego2_position(self):
-        self.last_x_position = self.morcego2.rect.right
-        self.morcego2.rect.x += round(self.morcego2.vel.x)
-
-    def adjust_morcego3_position(self):
-        self.last_x_position = self.morcego3.rect.right
-        self.morcego3.rect.x += round(self.morcego3.vel.x)
-
-    def adjust_morcego4_position(self):
-        self.last_x_position = self.morcego4.rect.right
-        self.morcego4.rect.x += round(self.morcego4.vel.x)
+    def adjust_enimies_position(self, enemie):
+        self.last_x_position = enemie.rect.right
+        enemie.rect.x += round(enemie.vel.x)
+        enemie.rect.y += round(enemie.vel.y)
 
     def adjust_callum_position(self):
         # ajusta o sprite do callum na tela no eixo X e Y
@@ -551,6 +432,10 @@ class Level1(tools._State):
             self.callum.rect.top = collider.rect.bottom
             self.callum.vel.y = 7
             self.callum.state = c.FALL
+        if collider == self.espinho:
+            if self.callum.die_timer == 0:
+                setup.SFX['pain'].play()
+            self.callum.star_death(self.game_info)
 
     def adjust_callum_position_for_y_collision_ground(self, collider):
         # ajusta a posição do heroi no eixo y em relação ao chão
@@ -570,37 +455,45 @@ class Level1(tools._State):
             self.callum.rect.bottom = collider.rect.top
             self.callum.state = c.WALK
 
-    def adjust_power1_position(self,power1):
+    def adjust_power1_position(self, power1):
         # ajustando a posição do poder 1(raio) do heroi(esse poder acompanha o heroi)
         if power1.state == c.FLYING:
-            if power1.looking ==c.RIGHT:
-                power1.rect.centery = self.callum.rect.centery+13
-                power1.rect.x = self.callum.rect.right-2
+            if power1.looking == c.RIGHT:
+                power1.rect.centery = self.callum.rect.centery + 13
+                power1.rect.x = self.callum.rect.right - 2
             else:
-                power1.rect.centery = self.callum.rect.centery+15
-                power1.rect.right = (self.callum.rect.left+3)
+                power1.rect.centery = self.callum.rect.centery + 15
+                power1.rect.right = (self.callum.rect.left + 3)
 
     def game_sound(self):
-        if (self.callum.rect.x > 0 and self.callum.rect.x< 4360):
+        if (self.callum.rect.x > 0 and self.callum.rect.x < 4360):
             if self.area != c.CASTLE:
                 self.area_previous = self.area
                 self.area = c.CASTLE
                 self.som.state = self.area
-                self.som.update()   
-        else:
+                self.som.update()
+        elif (self.callum.rect.x > 4360 and self.callum.rect.x < 8690):
             if self.area != c.FOREST:
                 self.area_previous = self.area
                 self.area = c.FOREST
                 self.som.state = self.area
-                print("mudou para floresta!")
+                # print("mudou para floresta!")
                 self.som.update()
+        else:
+            if self.callum.number_of_eggs == 1:
+                if self.area != c.VITORIA:
+                    self.area_previous = self.area
+                    self.area = c.VITORIA
+                    self.som.state = self.area
+                    # print("mudou para floresta!")
+                    self.som.update()
+
         if self.game_info[c.CALLUM_DEAD] == True:
             self.som.stop_music()
-            #self.som_gameover = pg.mixer.Sound(os.path.join('resources', 'sound', 'game_over.wav'))
+            # self.som_gameover = pg.mixer.Sound(os.path.join('resources', 'sound', 'game_over.wav'))
             setup.SFX['game_over'].play()
 
-
-# BLIT
+    # BLIT
 
     def blit_tela(self, surface):
         # desenhando na janela apenas a area definida pela camera
@@ -608,11 +501,11 @@ class Level1(tools._State):
         # desenhando o heroi e os inimigos na tela
         self.callum_and_enemy_group.draw(self.level)
         # desenhando o ovo na tela
-        if self.callum.number_of_eggs <1:
+        if self.callum.number_of_eggs < 1:
             self.egg_group.draw(self.level)
         # desenhando o poder na tela
         self.power1_group.draw(self.level)
-        #### ???????????
+
         surface.blit(self.level, (0, 0), self.camera)
         # desenhando os "corações" do heroi
         self.show_heart()
@@ -633,16 +526,15 @@ class Level1(tools._State):
 
     def show_power1(self):
         # apresentando na tela quantos "poderes 1" o heroi possui
-        if self.callum.power1_count >0:
+        if self.callum.power1_count > 0:
             self.power1_image = self.get_power1_image(383, 211, 55, 32)
             self.power1_image.set_colorkey(c.BLACK)
             self.power1_rect = self.power1_image.get_rect()
             self.power1_rect.x = 0
             self.power1_rect.y = 105
             setup.TELA.blit(self.power1_image, self.power1_rect)
-       
-        if self.callum.power1_count > 1:
 
+        if self.callum.power1_count > 1:
             self.power1_image2 = self.get_power1_image(383, 211, 55, 32)
             self.power1_image2.set_colorkey(c.BLACK)
             self.power1_rect2 = self.heart_image2.get_rect()
@@ -656,7 +548,6 @@ class Level1(tools._State):
             self.power1_rect3.x = 98
             self.power1_rect3.y = 105
             setup.TELA.blit(self.power1_image3, self.power1_rect3)
-
 
     def get_heart_image(self, x, y, width, height):
         # definindo a image do coração
@@ -681,7 +572,6 @@ class Level1(tools._State):
             setup.TELA.blit(self.heart_image, self.heart_rect)
 
         if self.callum.number_of_lifes > 1:
-
             self.heart_image2 = self.get_heart_image(0, 0, 16, 16)
             self.heart_image2.set_colorkey(c.BLACK)
             self.heart_rect2 = self.heart_image2.get_rect()
@@ -696,7 +586,6 @@ class Level1(tools._State):
             self.heart_rect3.y = 0
             setup.TELA.blit(self.heart_image3, self.heart_rect3)
 
-
     def get_egg_image(self, x, y, width, height):
         # definindo a image do coração
         self.spritesheet_egg = setup.GFX['egg']
@@ -708,7 +597,7 @@ class Level1(tools._State):
                                    (int(rect.width // 3),
                                     int(rect.height // 3)))
         return image
-  
+
     def show_egg(self):
         # apresentando na tela quantos "corações" o heroi possui
 
@@ -719,9 +608,8 @@ class Level1(tools._State):
             self.egg_rect.x = 0
             self.egg_rect.y = 50
             setup.TELA.blit(self.egg_image, self.egg_rect)
-        
 
-# UPDATES
+    # UPDATES
 
     def update(self, surface, keys, current_time):
         self.game_info[c.CURRENT_TIME] = self.current_time = current_time
@@ -733,7 +621,7 @@ class Level1(tools._State):
         third = self.camera.x + self.camera.w // 3
         callum_center = self.callum.rect.centerx
         callum_right = self.callum.rect.right
-        #print(self.callum.rect.midbottom)
+        # print(self.callum.rect.midbottom)
         if self.callum.vel.x > 0 and callum_center >= third:
             mult = 0.5 if callum_right < self.camera.centerx else 1
             new = self.camera.x + mult * self.callum.vel.x
@@ -747,58 +635,33 @@ class Level1(tools._State):
 
     def update_all_sprites(self, keys):
         self.callum.update(keys, self.game_info, self.power1_group)
-        self.witch1.update(self.game_info)
-        self.witch2.update(self.game_info)
-        self.witch3.update(self.game_info)
-        self.witch4.update(self.game_info)
-        self.witch5.update(self.game_info)
-        self.witch6.update(self.game_info)
-        self.witch7.update(self.game_info)
-        self.morcego1.update(self.game_info)
-        self.morcego2.update(self.game_info)
-        self.morcego3.update(self.game_info)
-        self.morcego4.update(self.game_info)
+        for enemie in self.lista_witchs:
+            enemie.update(self.game_info)
 
         self.egg1.update(self.game_info)
-
         self.update_number_of_eggs()
-        #self.show_egg()
-
+        # self.show_egg()
         self.adjust_sprites_positions()
         self.check_callum_dead()
         self.update_camera()
-    
+        self.vitoria()
+
     def update_number_of_eggs(self):
         collider = pg.sprite.spritecollideany(self.callum, self.egg_group)
         if (collider):
             self.callum.number_of_eggs = 1
-    
+
     def end_game(self):
         self.next = c.GAME_OVER
         if self.callum.die_timer == 150:
             self.done = True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def vitoria(self):
+        if self.callum.rect.x >= 8800:
+            if self.callum.number_of_eggs == 1:
+                self.next = c.VITORIA
+            else:
+                self.next = c.ESQUECEU
+                self.som.stop_music()
+                setup.SFX['game_over'].play()
+            self.done = True
